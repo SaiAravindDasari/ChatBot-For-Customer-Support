@@ -1,7 +1,7 @@
 import json
 import logging
 import re
-from typing import Dict, List, Any Optional
+from typing import Dict, List, Any, Optional
 
 try:
     import spacy
