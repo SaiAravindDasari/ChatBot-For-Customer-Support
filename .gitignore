@@ -1,0 +1,63 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+eggs/
+*.whl
+
+# === Virtual Environments ===
+venv/
+.venv/
+env/
+ENV/
+
+# === IDE / Editors ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# === Testing / Coverage ===
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.tox/
+.nox/
+
+# === Environment & Secrets ===
+.env
+.env.local
+.env.production
+
+# === Database ===
+*.db
+*.sqlite3
+*.db-wal
+*.db-shm
+
+# === OS Files ===
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# === Logs ===
+*.log
+logs/
+
+# === NLTK / Model Caches ===
+nltk_data/
+
+# === Docker ===
+docker-compose.override.yml

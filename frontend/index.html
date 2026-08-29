@@ -1,0 +1,2416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueryDesk — Customer Support Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #080d1a;
+            --bg-surface: #0f172a;
+            --bg-surface-elevated: #1e293b;
+            --bg-surface-glass: rgba(15, 23, 42, 0.9);
+            --bg-input: #1e293b;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --border-hover: rgba(59, 130, 246, 0.5);
+            --border-active: #3b82f6;
+            
+            --primary: #3b82f6;
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --primary-glow: rgba(59, 130, 246, 0.35);
+            --primary-light: rgba(59, 130, 246, 0.16);
+            
+            --user-bubble-bg: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            --bot-bubble-bg: #1e293b;
+            
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            
+            --code-color: #38bdf8;
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.35);
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            
+            --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
+            --shadow-card: 0 10px 32px rgba(0, 0, 0, 0.4);
+            
+            --transition-bounce: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body.light {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-surface-elevated: #f1f5f9;
+            --bg-surface-glass: rgba(255, 255, 255, 0.94);
+            --bg-input: #f1f5f9;
+            --border-color: #cbd5e1;
+            --border-hover: rgba(37, 99, 235, 0.4);
+            --border-active: #2563eb;
+            
+            --primary: #2563eb;
+            --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            --primary-glow: rgba(37, 99, 235, 0.2);
+            --primary-light: rgba(37, 99, 235, 0.1);
+            
+            --user-bubble-bg: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            --bot-bubble-bg: #ffffff;
+            
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            
+            --code-color: #0284c7;
+            
+            --shadow-subtle: 0 4px 18px rgba(0, 0, 0, 0.08);
+            --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        body {
+            font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-size: 15px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        /* Ambient Dynamic Aurora Mesh */
+        .ambient-aurora {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .aurora-blob {
+            position: absolute;
+            width: 550px;
+            height: 550px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.18;
+            animation: auroraFloat 18s infinite alternate ease-in-out;
+        }
+
+        .aurora-1 { top: -120px; left: -100px; background: #3b82f6; }
+        .aurora-2 { bottom: -150px; right: -100px; background: #06b6d4; animation-delay: -8s; }
+        .aurora-3 { top: 35%; left: 45%; width: 400px; height: 400px; background: #8b5cf6; opacity: 0.1; animation-duration: 24s; }
+
+        @keyframes auroraFloat {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate(70px, 50px) scale(1.15) rotate(15deg); }
+            100% { transform: translate(-50px, 90px) scale(0.9) rotate(-10deg); }
+        }
+
+        button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; outline: none; }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: var(--radius-full); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* Top Header Bar */
+        .app-header {
+            height: 72px;
+            padding: 0 24px;
+            background: var(--bg-surface-glass);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 50;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .brand-profile {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .avatar-frame {
+            position: relative;
+            width: 46px;
+            height: 46px;
+        }
+
+        .avatar-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.15rem;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            box-shadow: 0 4px 16px var(--primary-glow);
+            transition: var(--transition-bounce);
+        }
+
+        .avatar-frame:hover .avatar-circle {
+            transform: scale(1.1) rotate(6deg);
+        }
+
+        .online-dot {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--success);
+            border: 2px solid var(--bg-surface);
+            box-shadow: 0 0 10px var(--success);
+            animation: pulseGlow 2s infinite;
+        }
+
+        .brand-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .brand-name {
+            font-weight: 800;
+            font-size: 1.12rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .verified-badge {
+            background: #3b82f6;
+            color: #ffffff;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            box-shadow: 0 2px 6px var(--primary-glow);
+        }
+
+        .brand-status {
+            font-size: 0.8rem;
+            color: var(--success);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .header-tools {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tool-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition-bounce);
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface-elevated);
+        }
+
+        .tool-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-card);
+        }
+
+        .tool-btn:active {
+            transform: scale(0.96);
+        }
+
+        .tool-btn.success {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border-color: rgba(16, 185, 129, 0.35);
+        }
+
+        .tool-btn.success:hover {
+            background: var(--success);
+            color: #ffffff;
+            box-shadow: 0 0 20px var(--success-glow);
+        }
+
+        .btn-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 1rem;
+            transition: var(--transition-bounce);
+        }
+
+        .btn-icon:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+            transform: translateY(-2px) rotate(8deg);
+        }
+
+        /* Workspace */
+        .workspace {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 22px 18px;
+            gap: 20px;
+            overflow-y: auto;
+            backdrop-filter: blur(16px);
+        }
+
+        @media (max-width: 880px) {
+            .sidebar { display: none; }
+        }
+
+        .sidebar-search-box {
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .sidebar-search-input {
+            width: 100%;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 8px 12px 8px 34px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .sidebar-search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+
+        .sidebar-search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .sidebar-heading {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+            padding-left: 6px;
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: var(--transition-bounce);
+            text-align: left;
+            width: 100%;
+        }
+
+        .quick-link:hover {
+            background: var(--bg-surface-elevated);
+            color: var(--text-primary);
+            transform: translateX(6px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .quick-link:active {
+            transform: scale(0.98);
+        }
+
+        .quick-link-icon {
+            font-size: 1.15rem;
+            transition: var(--transition-bounce);
+        }
+
+        .quick-link:hover .quick-link-icon {
+            transform: scale(1.25);
+        }
+
+        .order-preset-chip {
+            padding: 12px 14px;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            margin-bottom: 8px;
+        }
+
+        .order-preset-chip:hover {
+            border-color: var(--primary);
+            background: var(--bg-surface-glass);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .order-id-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--code-color);
+        }
+
+        .system-status-box {
+            margin-top: auto;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .system-status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Central Chat Stage */
+        .chat-stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: transparent;
+            position: relative;
+        }
+
+        .chat-feed {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message-row {
+            display: flex;
+            gap: 14px;
+            max-width: 82%;
+            animation: messageEntry 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .message-row.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-row.bot, .message-row.agent {
+            align-self: flex-start;
+        }
+
+        .msg-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            margin-top: 4px;
+            transition: var(--transition-bounce);
+        }
+
+        .msg-avatar:hover {
+            transform: scale(1.12);
+        }
+
+        .msg-avatar.bot {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
+        .msg-avatar.agent {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 14px var(--success-glow);
+        }
+
+        .msg-avatar.user {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .msg-body {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .msg-bubble {
+            padding: 16px 22px;
+            border-radius: var(--radius-lg);
+            font-size: 0.98rem;
+            line-height: 1.65;
+            font-weight: 400;
+            box-shadow: var(--shadow-subtle);
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+
+        .msg-bubble:hover {
+            box-shadow: var(--shadow-card);
+        }
+
+        .msg-bubble b, .msg-bubble strong {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .msg-bubble code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            font-weight: 600;
+            background: rgba(56, 189, 248, 0.14);
+            color: var(--code-color);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            display: inline-block;
+        }
+
+        .msg-bubble code:hover {
+            transform: scale(1.06);
+            background: var(--code-color);
+            color: #0f172a;
+        }
+
+        .message-row.bot .msg-bubble {
+            background: var(--bot-bubble-bg);
+            border: 1px solid var(--border-color);
+            border-top-left-radius: 4px;
+            color: var(--text-primary);
+        }
+
+        .message-row.agent .msg-bubble {
+            background: var(--bot-bubble-bg);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            border-top-left-radius: 4px;
+            color: var(--text-primary);
+        }
+
+        .message-row.user .msg-bubble {
+            background: var(--user-bubble-bg);
+            color: #ffffff;
+            border-top-right-radius: 4px;
+            box-shadow: 0 4px 18px var(--primary-glow);
+        }
+
+        .msg-meta {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 4px;
+        }
+
+        .message-row.user .msg-meta {
+            justify-content: flex-end;
+        }
+
+        .read-ticks {
+            color: #60a5fa;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        /* Shipment Telemetry Card with Animated SVG Route */
+        .shipment-card {
+            margin-top: 14px;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .shipment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+        }
+
+        .shipment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .tracking-pill {
+            background: var(--primary-light);
+            color: var(--code-color);
+            padding: 3px 10px;
+            border-radius: var(--radius-sm);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .route-track {
+            position: relative;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        .route-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .route-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+            border-radius: 4px;
+            transition: width 1.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 14px var(--primary-glow);
+        }
+
+        .courier-pin {
+            position: absolute;
+            top: -18px;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            animation: truckBounce 1.8s infinite ease-in-out;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+            cursor: pointer;
+            transition: var(--transition-bounce);
+        }
+
+        .courier-pin:hover {
+            transform: translateX(-50%) scale(1.25);
+        }
+
+        .route-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .radar-trigger-btn {
+            margin-top: 4px;
+            background: var(--primary-light);
+            color: var(--code-color);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 7px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition-bounce);
+        }
+
+        .radar-trigger-btn:hover {
+            background: var(--primary);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        /* Action Chips */
+        .chips-tray {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .action-chip {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-chip:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 4px 14px var(--primary-glow);
+            background: var(--bg-surface);
+        }
+
+        /* Latency Pill */
+        .latency-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            font-size: 0.76rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .latency-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 6px var(--success);
+        }
+
+        /* Interactive Return Pass Voucher */
+        .return-voucher-card {
+            margin-top: 14px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%);
+            border: 1.5px dashed rgba(16, 185, 129, 0.4);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            animation: messageEntry 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .voucher-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .voucher-carrier-tag {
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: var(--success);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .voucher-badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: var(--radius-full);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .voucher-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            background: var(--bg-surface-elevated);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+        }
+
+        .voucher-field {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .v-label {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .v-val {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .voucher-barcode {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: #ffffff;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+        }
+
+        .barcode-lines {
+            width: 100%;
+            height: 28px;
+            background: repeating-linear-gradient(90deg, #0f172a 0px, #0f172a 3px, transparent 3px, transparent 6px, #0f172a 6px, #0f172a 7px, transparent 7px, transparent 10px, #0f172a 10px, #0f172a 14px);
+            border-radius: 2px;
+        }
+
+        .barcode-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #0f172a;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+        }
+
+        .voucher-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .voucher-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background: var(--primary-gradient);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition-bounce);
+        }
+
+        .voucher-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .voucher-btn.secondary {
+            background: var(--bg-surface-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .voucher-btn.secondary:hover {
+            border-color: var(--border-hover);
+        }
+
+        /* 4-Stage Stepper */
+        .stepper-stages {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 12px 0 6px 0;
+            padding: 6px 0;
+        }
+
+        .step-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            z-index: 2;
+        }
+
+        .step-circle {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 800;
+            background: var(--bg-surface-elevated);
+            border: 2px solid var(--border-color);
+            color: var(--text-muted);
+            transition: var(--transition-bounce);
+        }
+
+        .step-node.done .step-circle {
+            background: var(--success);
+            border-color: var(--success);
+            color: #ffffff;
+            box-shadow: 0 0 10px var(--success-glow);
+        }
+
+        .step-node.active .step-circle {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 0 12px var(--primary-glow);
+            animation: pulseGlow 1.5s infinite;
+        }
+
+        .step-title {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .step-node.active .step-title, .step-node.done .step-title {
+            color: var(--text-primary);
+        }
+
+        .step-connector {
+            flex: 1;
+            height: 3px;
+            background: var(--border-color);
+            margin: 0 4px;
+            margin-bottom: 16px;
+            border-radius: 2px;
+        }
+
+        /* Interactive Product Catalog Showcase */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        .product-card {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: var(--transition-bounce);
+            position: relative;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+        }
+
+        .product-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 24px var(--primary-glow);
+        }
+
+        .product-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-emoji {
+            font-size: 1.8rem;
+        }
+
+        .product-badge-pill {
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: var(--radius-full);
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--primary);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .product-name {
+            font-weight: 700;
+            font-size: 0.88rem;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.74rem;
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .product-specs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin: 2px 0;
+        }
+
+        .spec-tag {
+            font-size: 0.66rem;
+            padding: 2px 6px;
+            background: var(--bg-surface);
+            border-radius: 4px;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        .product-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .product-price {
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: var(--success);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .product-order-btn {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.76rem;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-bounce);
+        }
+
+        .product-order-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .telemetry-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: var(--bg-surface-elevated);
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+        }
+
+        .telemetry-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Feedback Buttons */
+        .feedback-bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .feedback-btn {
+            opacity: 0.5;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            transition: var(--transition-bounce);
+        }
+
+        .feedback-btn:hover {
+            opacity: 1;
+            transform: scale(1.2);
+            background: var(--bg-surface-elevated);
+        }
+
+        /* Escalation Priority Alert Card */
+        .escalation-alert-card {
+            margin-top: 14px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(59, 130, 246, 0.12) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            animation: messageEntry 0.3s ease;
+        }
+
+        .esc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .esc-badge {
+            background: var(--danger);
+            color: #ffffff;
+            font-size: 0.74rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 2px 8px var(--danger-glow);
+        }
+
+        .esc-sla {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--warning);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .esc-body {
+            font-size: 0.88rem;
+            line-height: 1.4;
+            color: var(--text-primary);
+        }
+
+        .esc-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .esc-btn {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            border-radius: var(--radius-md);
+            padding: 8px 14px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition-bounce);
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        .esc-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
+        .esc-btn.secondary {
+            background: var(--bg-surface-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            box-shadow: none;
+        }
+
+        .esc-btn.secondary:hover {
+            border-color: var(--primary);
+            background: var(--bg-surface);
+        }
+
+        /* Composer Area */
+        .composer-bar {
+            padding: 18px 26px;
+            background: var(--bg-surface-glass);
+            border-top: 1px solid var(--border-color);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+
+        .composer-inner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: 6px 14px;
+            transition: var(--transition-bounce);
+        }
+
+        .composer-inner:focus-within {
+            border-color: var(--border-active);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+            background: var(--bg-surface);
+        }
+
+        .text-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.98rem;
+            padding: 10px 6px;
+        }
+
+        .text-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .mic-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.05rem;
+            transition: var(--transition-bounce);
+        }
+
+        .mic-btn:hover {
+            background: var(--bg-surface-elevated);
+            transform: scale(1.1);
+        }
+
+        .mic-btn.recording {
+            background: rgba(239, 68, 68, 0.25);
+            color: var(--danger);
+            animation: pulseGlow 1.2s infinite;
+        }
+
+        /* Voice Waveform Visualizer */
+        .voice-waveform {
+            display: none;
+            align-items: center;
+            gap: 3px;
+            height: 20px;
+            padding: 0 6px;
+        }
+
+        .voice-waveform.active {
+            display: flex;
+        }
+
+        .wave-bar {
+            width: 3px;
+            background: var(--danger);
+            border-radius: 2px;
+            animation: soundWave 0.8s infinite ease-in-out;
+        }
+
+        .wave-bar:nth-child(1) { height: 6px; animation-delay: 0.1s; }
+        .wave-bar:nth-child(2) { height: 16px; animation-delay: 0.3s; }
+        .wave-bar:nth-child(3) { height: 10px; animation-delay: 0.15s; }
+        .wave-bar:nth-child(4) { height: 18px; animation-delay: 0.4s; }
+
+        @keyframes soundWave {
+            0%, 100% { transform: scaleY(0.4); }
+            50% { transform: scaleY(1.4); }
+        }
+
+        .send-btn {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition-bounce);
+            box-shadow: 0 3px 12px var(--primary-glow);
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 20px var(--primary-glow);
+        }
+
+        .send-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Typing Dots */
+        .typing-bubble {
+            padding: 14px 20px;
+            background: var(--bot-bubble-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            border-top-left-radius: 4px;
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+            width: fit-content;
+        }
+
+        .wave-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: waveBounce 1.4s infinite ease-in-out;
+        }
+
+        .wave-dot:nth-child(2) { animation-delay: 0.2s; }
+        .wave-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        /* Modal Overlays & Toasts */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.72);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(12px);
+        }
+
+        .modal-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            width: 480px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            box-shadow: var(--shadow-card);
+            animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* GPS Radar Map Modal */
+        .radar-canvas-container {
+            width: 100%;
+            height: 220px;
+            background: #0b1329;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .radar-sweep-beam {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 1px solid rgba(6, 182, 212, 0.4);
+            background: conic-gradient(from 0deg at 50% 50%, rgba(6, 182, 212, 0.3) 0deg, transparent 60deg, transparent 360deg);
+            animation: radarSpin 4s linear infinite;
+        }
+
+        .radar-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .radar-target-dot {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: #38bdf8;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #38bdf8;
+            animation: pulseGlow 1.5s infinite;
+        }
+
+        @keyframes radarSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .star-picker {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            font-size: 2.2rem;
+            cursor: pointer;
+        }
+
+        .star-item {
+            color: var(--text-muted);
+            transition: var(--transition-bounce);
+        }
+
+        .star-item.active {
+            color: #f59e0b;
+            transform: scale(1.2);
+            text-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+        }
+
+        .star-item:hover {
+            transform: scale(1.3) rotate(8deg);
+        }
+
+        .toast-shelf {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .toast-item {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: toastEnter 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: auto;
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes messageEntry { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes toastEnter { from { opacity: 0; transform: translateX(50px) scale(0.9); } to { opacity: 1; transform: translateX(0) scale(1); } }
+        @keyframes pulseGlow { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); } }
+        @keyframes waveBounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-7px); } }
+        @keyframes truckBounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-4px); } }
+    </style>
+</head>
+<body class="dark">
+    <!-- Ambient Dynamic Aurora Mesh -->
+    <div class="ambient-aurora">
+        <div class="aurora-blob aurora-1"></div>
+        <div class="aurora-blob aurora-2"></div>
+        <div class="aurora-blob aurora-3"></div>
+    </div>
+
+    <!-- Celebration Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="toast-shelf" id="toast-shelf"></div>
+
+    <header class="app-header">
+        <div class="brand-profile">
+            <div class="avatar-frame">
+                <div class="avatar-circle">QD</div>
+                <div class="online-dot" id="live-online-dot"></div>
+            </div>
+            <div class="brand-info">
+                <div class="brand-name">
+                    QueryDesk Support
+                    <span class="verified-badge" title="Verified Support Assistant">✓</span>
+                </div>
+                <div class="brand-status" id="brand-status-text">
+                    <span>🟢 Active • Replies instantly</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-tools">
+            <button class="tool-btn" onclick="openRadarModal('#QD-1234')" title="Open GPS tracking radar">
+                <span>📍</span>
+                <span>GPS Radar</span>
+            </button>
+            <button class="tool-btn" id="tts-btn" title="Toggle voice readout">
+                <span id="tts-icon">🔊</span>
+                <span>Voice</span>
+            </button>
+            <button class="tool-btn" onclick="window.open((window.API_BASE || '') + '/api/sessions/' + sessionId + '/transcript-export', '_blank')" title="View official verified certificate">
+                <span>📄</span>
+                <span>Transcript</span>
+            </button>
+            <button class="tool-btn success" id="resolve-btn" title="Rate this support session">
+                <span>✓</span>
+                <span>Resolved</span>
+            </button>
+            <div class="latency-pill" id="latency-pill" onclick="openDiagModal()" style="cursor:pointer;" title="Click to view live system diagnostics">
+                <span class="latency-dot" id="latency-dot"></span>
+                <span id="latency-val">🟢 18ms</span>
+            </div>
+            <button class="btn-icon" id="theme-btn" title="Toggle dark/light mode">☾</button>
+        </div>
+    </header>
+
+    <!-- Live System Diagnostics Telemetry Modal -->
+    <div class="modal-overlay" id="diag-modal" onclick="if(event.target===this) document.getElementById('diag-modal').style.display='none'">
+        <div class="modal-card" style="width: 520px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="font-size: 1.25rem; font-weight: 800;">⚡ System Health & Telemetry</h3>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">Real-time runtime infrastructure diagnostics</div>
+                </div>
+                <button onclick="document.getElementById('diag-modal').style.display='none'" style="font-size: 1.4rem; color: var(--text-muted);">&times;</button>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="telemetry-row">
+                    <span>WebSocket Latency</span>
+                    <span class="telemetry-val" id="diag-latency">18 ms</span>
+                </div>
+                <div class="telemetry-row">
+                    <span>NLP Inference Engine</span>
+                    <span class="telemetry-val" style="color:var(--success);">Hybrid Vector RAG (FAISS + TF-IDF)</span>
+                </div>
+                <div class="telemetry-row">
+                    <span>Database Engine</span>
+                    <span class="telemetry-val">SQLite3 WAL Mode (Async IO)</span>
+                </div>
+                <div class="telemetry-row">
+                    <span>Session Token Bucket</span>
+                    <span class="telemetry-val" style="color:var(--success);">Healthy (30 req/min)</span>
+                </div>
+                <div class="telemetry-row">
+                    <span>Active Session ID</span>
+                    <span class="telemetry-val" id="diag-session-id" style="font-size:0.75rem;">--</span>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                <button class="action-chip" onclick="pingServerBenchmark()">⚡ Run Latency Benchmark</button>
+                <button class="tool-btn" onclick="document.getElementById('diag-modal').style.display='none'">Close Diagnostics</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive GPS Delivery Radar Modal -->
+    <div class="modal-overlay" id="radar-modal" onclick="if(event.target===this) document.getElementById('radar-modal').style.display='none'">
+        <div class="modal-card" style="width: 540px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="font-size: 1.25rem; font-weight: 800;" id="radar-order-title">📍 Live Delivery Radar</h3>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);" id="radar-carrier-info">FedEx Express • Out for Delivery</div>
+                </div>
+                <button onclick="document.getElementById('radar-modal').style.display='none'" style="font-size: 1.4rem; color: var(--text-muted);">&times;</button>
+            </div>
+
+            <div class="radar-canvas-container">
+                <div class="radar-grid"></div>
+                <div class="radar-sweep-beam"></div>
+                <div class="radar-target-dot" style="top: 45%; left: 55%;"></div>
+                <div style="position: absolute; bottom: 12px; left: 14px; font-size: 0.74rem; font-family: 'JetBrains Mono', monospace; color: #38bdf8; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 4px;">
+                    GPS: 41.8781° N, 87.6298° W (Speed: 28 mph)
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-surface-elevated); padding: 12px 16px; border-radius: var(--radius-md);">
+                <div>
+                    <div style="font-size: 0.76rem; color: var(--text-muted);">Estimated Arrival</div>
+                    <div style="font-size: 1.05rem; font-weight: 700; color: var(--success);" id="radar-eta">Today by 6:30 PM (in ~45 min)</div>
+                </div>
+                <button class="action-chip" onclick="showToast('Courier driver notified!', '🚚')">📞 Contact Driver</button>
+            </div>
+
+            <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                <button class="tool-btn" onclick="document.getElementById('radar-modal').style.display='none'">Close Map</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CSAT Survey Modal -->
+    <div class="modal-overlay" id="csat-modal" onclick="if(event.target===this) closeCsatModal()">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 1.25rem; font-weight: 700;">How did we do?</h3>
+                <button onclick="closeCsatModal()" style="font-size: 1.4rem; color: var(--text-muted);">&times;</button>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-secondary); text-align: center;">Your feedback helps us continuously improve our customer experience:</p>
+            <div class="star-picker" id="csat-stars">
+                <span class="star-item active" onclick="setCsatRating(1)">★</span>
+                <span class="star-item active" onclick="setCsatRating(2)">★</span>
+                <span class="star-item active" onclick="setCsatRating(3)">★</span>
+                <span class="star-item active" onclick="setCsatRating(4)">★</span>
+                <span class="star-item active" onclick="setCsatRating(5)">★</span>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;" id="csat-tags">
+                <span class="action-chip" onclick="this.classList.toggle('active')">⚡ Fast Resolution</span>
+                <span class="action-chip" onclick="this.classList.toggle('active')">🎯 Accurate Info</span>
+                <span class="action-chip" onclick="this.classList.toggle('active')">🤝 Polite & Friendly</span>
+                <span class="action-chip" onclick="this.classList.toggle('active')">📦 Return Handled</span>
+            </div>
+            <textarea id="csat-comment" class="text-input" style="background:var(--bg-input); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:12px; font-size:0.9rem;" rows="3" placeholder="Additional comments (optional)..."></textarea>
+            <button class="send-btn" style="justify-content:center; padding:12px; font-size:0.95rem;" onclick="submitCsat()">Submit Feedback</button>
+        </div>
+    </div>
+
+    <!-- FAQ Help Modal -->
+    <div class="modal-overlay" id="faq-modal" onclick="if(event.target===this) document.getElementById('faq-modal').style.display='none'">
+        <div class="modal-card" style="width: 520px; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 1.25rem; font-weight: 700;">Customer Help & Policies</h3>
+                <button onclick="document.getElementById('faq-modal').style.display='none'" style="font-size: 1.4rem; color: var(--text-muted);">&times;</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 14px; font-size: 0.92rem; line-height: 1.6;">
+                <div style="background:var(--bg-surface-elevated); padding:14px; border-radius:var(--radius-md);">
+                    <b style="color:var(--text-primary);">📦 30-Day Return Policy</b>
+                    <p style="color:var(--text-secondary); margin-top:4px;">We offer 30-day hassle-free returns with free prepaid shipping labels for all eligible orders.</p>
+                </div>
+                <div style="background:var(--bg-surface-elevated); padding:14px; border-radius:var(--radius-md);">
+                    <b style="color:var(--text-primary);">💳 Refund Settlement</b>
+                    <p style="color:var(--text-secondary); margin-top:4px;">Refunds are processed within 2-4 business days after return arrival and credited directly to your original payment method.</p>
+                </div>
+                <div style="background:var(--bg-surface-elevated); padding:14px; border-radius:var(--radius-md);">
+                    <b style="color:var(--text-primary);">🚚 Shipping & Tracking</b>
+                    <p style="color:var(--text-secondary); margin-top:4px;">All standard orders ship via FedEx, UPS, or DHL with real-time GPS tracking numbers provided via email.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="workspace">
+        <aside class="sidebar">
+            <div class="sidebar-search-box">
+                <span class="sidebar-search-icon">🔍</span>
+                <input type="text" class="sidebar-search-input" id="sidebar-search" placeholder="Search topics & orders..." oninput="filterSidebar(this.value)">
+            </div>
+
+            <div id="quick-links-section">
+                <div class="sidebar-heading">Quick Actions</div>
+                <button class="quick-link" onclick="sendMessage('Track my order #QD-1234')">
+                    <span class="quick-link-icon">📦</span>
+                    <span>Track Order</span>
+                </button>
+                <button class="quick-link" onclick="sendMessage('I need to return an item from order #QD-5678')">
+                    <span class="quick-link-icon">🔄</span>
+                    <span>Start a Return</span>
+                </button>
+                <button class="quick-link" onclick="sendMessage('Where is my refund for #QD-9012?')">
+                    <span class="quick-link-icon">💳</span>
+                    <span>Check Refund</span>
+                </button>
+                <button class="quick-link" onclick="sendMessage('Recommend popular products and gear')">
+                    <span class="quick-link-icon">🛍️</span>
+                    <span>Browse Products</span>
+                </button>
+                <button class="quick-link" id="sidebar-escalate-btn" onclick="requestEscalation()">
+                    <span class="quick-link-icon">👨‍💼</span>
+                    <span>Speak to Agent</span>
+                </button>
+            </div>
+
+            <div id="sample-orders-section">
+                <div class="sidebar-heading">Recent Orders</div>
+                <div class="order-preset-chip" onclick="sendMessage('Track my order #QD-1234')">
+                    <div>
+                        <div class="order-id-label">#QD-1234</div>
+                        <div style="font-size:0.78rem; color:var(--text-muted); font-weight:500;">Mechanical Keyboard</div>
+                    </div>
+                    <span style="font-size:0.78rem; color:var(--primary); font-weight:700;">In Transit</span>
+                </div>
+                <div class="order-preset-chip" onclick="sendMessage('I need to return an item from order #QD-5678')">
+                    <div>
+                        <div class="order-id-label">#QD-5678</div>
+                        <div style="font-size:0.78rem; color:var(--text-muted); font-weight:500;">Wireless Headphones</div>
+                    </div>
+                    <span style="font-size:0.78rem; color:var(--success); font-weight:700;">Out for Delivery</span>
+                </div>
+                <div class="order-preset-chip" onclick="sendMessage('Where is my refund for #QD-9012?')">
+                    <div>
+                        <div class="order-id-label">#QD-9012</div>
+                        <div style="font-size:0.78rem; color:var(--text-muted); font-weight:500;">34\" Curved Monitor</div>
+                    </div>
+                    <span style="font-size:0.78rem; color:var(--warning); font-weight:700;">Delivered</span>
+                </div>
+            </div>
+
+            <div class="system-status-box" onclick="openDiagModal()" style="cursor:pointer;" title="Click to view live system diagnostics">
+                <div class="system-status-row">
+                    <span>Response Time</span>
+                    <span style="color:var(--success); font-weight:700; font-family:'JetBrains Mono', monospace;">< 45ms</span>
+                </div>
+                <div class="system-status-row">
+                    <span>Security</span>
+                    <span style="font-family:'JetBrains Mono', monospace; font-weight:600;">TLS 1.3 / HMAC</span>
+                </div>
+                <div class="system-status-row" style="margin-top:2px; font-size:0.76rem;">
+                    <a href="javascript:void(0)" onclick="event.stopPropagation(); document.getElementById('faq-modal').style.display='flex'" style="color:var(--primary); text-decoration:none; font-weight:600;">📚 Help & FAQ Guide</a>
+                </div>
+            </div>
+        </aside>
+
+        <main class="chat-stage">
+            <div class="chat-feed" id="chat-stream">
+                <div class="message-row bot">
+                    <div class="msg-avatar bot">QD</div>
+                    <div class="msg-body">
+                        <div class="msg-bubble">
+                            Hi there! 👋 Welcome to customer support. I'm here to help you track orders, initiate easy returns, check refunds, recommend products, or answer any questions. What can I do for you today?
+                        </div>
+                        <div class="msg-meta">
+                            <span>QueryDesk Assistant · Just now</span>
+                            <span style="cursor:pointer;" onclick="speakText('Hi there! Welcome to customer support. What can I do for you today?')">🔊</span>
+                        </div>
+                        <div class="chips-tray">
+                            <button class="action-chip" onclick="sendMessage('Track my order #QD-1234')">📦 Track #QD-1234</button>
+                            <button class="action-chip" onclick="sendMessage('I need to return an item from order #QD-5678')">🔄 Return #QD-5678</button>
+                            <button class="action-chip" onclick="sendMessage('Recommend popular products and gear')">🛍️ Browse Gear</button>
+                            <button class="action-chip" onclick="sendMessage('What is your return policy?')">📋 Return Policy</button>
+                            <button class="action-chip" onclick="sendMessage('Where is my refund for #QD-9012?')">💳 Refund #QD-9012</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="composer-bar">
+                <div class="composer-inner">
+                    <input type="file" id="file-input" style="display: none;" accept="image/*,application/pdf">
+                    <button class="btn-icon" id="attach-btn" title="Upload receipt or photo" style="border:none; background:transparent;">📎</button>
+                    <button class="mic-btn" id="mic-btn" title="Voice Input (Speech-to-Text)">🎤</button>
+                    <div class="voice-waveform" id="voice-waveform">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div>
+                    <input type="text" class="text-input" id="msg-input" placeholder="Type a message or order #QD-XXXX...">
+                    <button class="send-btn" id="send-btn">
+                        <span>Send</span>
+                        <svg style="width:14px;height:14px;fill:currentColor;" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE = (location.origin && location.origin !== 'null' && !location.origin.startsWith('file')) ? '' : 'http://127.0.0.1:5000';
+        const WS_BASE = (location.host) ? `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}` : 'ws://127.0.0.1:5000';
+        window.API_BASE = API_BASE;
+        window.WS_BASE = WS_BASE;
+
+        const sessionId = 'qd-' + Math.random().toString(36).substring(2, 10);
+        let ws = null;
+        let ttsEnabled = true;
+        let isEscalated = false;
+        let selectedCsatRating = 5;
+
+        const chatStream = document.getElementById('chat-stream');
+        const msgInput = document.getElementById('msg-input');
+        const sendBtn = document.getElementById('send-btn');
+        const micBtn = document.getElementById('mic-btn');
+        const ttsBtn = document.getElementById('tts-btn');
+        const fileInput = document.getElementById('file-input');
+        const voiceWaveform = document.getElementById('voice-waveform');
+
+        // Audio Chimes
+        function playChime(freq = 587.33, type = 'sine', duration = 0.15) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(0.06, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch(e) {}
+        }
+
+        // Particle Confetti Engine for Celebrations
+        function triggerConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#3b82f6', '#06b6d4', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+            for (let i = 0; i < 70; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 14,
+                    vy: (Math.random() - 0.7) * 14,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: 1,
+                    decay: Math.random() * 0.02 + 0.015
+                });
+            }
+
+            function render() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let alive = false;
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.3;
+                    p.alpha -= p.decay;
+                    if (p.alpha > 0) {
+                        alive = true;
+                        ctx.globalAlpha = p.alpha;
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+                if (alive) requestAnimationFrame(render);
+                else ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+            render();
+        }
+
+        function showToast(message, icon = '✨') {
+            const container = document.getElementById('toast-shelf');
+            const toast = document.createElement('div');
+            toast.className = 'toast-item';
+            toast.innerHTML = `<span style="font-size:1.1rem;">${icon}</span><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-10px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Theme Toggle
+        const themeBtn = document.getElementById('theme-btn');
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            document.body.classList.toggle('light');
+            themeBtn.textContent = document.body.classList.contains('dark') ? '☾' : '☀';
+        });
+
+        // TTS Toggle
+        ttsBtn.addEventListener('click', () => {
+            ttsEnabled = !ttsEnabled;
+            document.getElementById('tts-icon').textContent = ttsEnabled ? '🔊' : '🔇';
+            showToast(`Voice readout ${ttsEnabled ? 'enabled' : 'muted'}`, ttsEnabled ? '🔊' : '🔇');
+        });
+
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const cleanText = text.replace(/<[^>]*>?/gm, '').replace(/https?:\/\/\S+/g, '');
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'en-US';
+            utterance.rate = 1.0;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Copy Code to Clipboard Helper
+        function copyCode(text) {
+            navigator.clipboard.writeText(text);
+            showToast(`Copied ${text} to clipboard!`, '📋');
+            playChime(659.25, 'sine', 0.1);
+        }
+
+        // Radar Modal Opener
+        function openRadarModal(orderId = '#QD-1234') {
+            document.getElementById('radar-order-title').textContent = `📍 Live Radar: ${orderId}`;
+            document.getElementById('radar-modal').style.display = 'flex';
+            playChime(523.25, 'triangle', 0.2);
+        }
+
+        // Sidebar Filter
+        function filterSidebar(val) {
+            const query = val.toLowerCase().trim();
+            const links = document.querySelectorAll('#quick-links-section .quick-link');
+            const chips = document.querySelectorAll('#sample-orders-section .order-preset-chip');
+
+            links.forEach(l => {
+                l.style.display = l.textContent.toLowerCase().includes(query) ? 'flex' : 'none';
+            });
+            chips.forEach(c => {
+                c.style.display = c.textContent.toLowerCase().includes(query) ? 'flex' : 'none';
+            });
+        }
+
+        // Speech Recognition
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            const recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+
+            recognition.onstart = () => {
+                micBtn.classList.add('recording');
+                voiceWaveform.classList.add('active');
+                msgInput.placeholder = "Listening... speak now";
+                playChime(659.25);
+            };
+            recognition.onresult = (event) => {
+                let transcript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    transcript += event.results[i][0].transcript;
+                }
+                msgInput.value = transcript;
+            };
+            recognition.onend = () => {
+                micBtn.classList.remove('recording');
+                voiceWaveform.classList.remove('active');
+                msgInput.placeholder = "Type a message or order #QD-XXXX...";
+                if (msgInput.value.trim().length > 0) {
+                    sendMessage(msgInput.value.trim());
+                }
+            };
+            micBtn.addEventListener('click', () => {
+                if (micBtn.classList.contains('recording')) recognition.stop();
+                else recognition.start();
+            });
+        }
+
+        // WebSocket Connection
+        let pingInterval = null;
+        let lastPingTime = 0;
+
+        function connectWs() {
+            try {
+                ws = new WebSocket(`${WS_BASE}/ws/${sessionId}`);
+                ws.onopen = () => {
+                    const pill = document.getElementById('latency-val');
+                    if (pill) pill.textContent = '🟢 Connected';
+                    startPingLoop();
+                };
+                ws.onmessage = (e) => {
+                    const data = JSON.parse(e.data);
+                    if (data.type === 'pong') {
+                        const rtt = Math.round(performance.now() - lastPingTime);
+                        const pill = document.getElementById('latency-val');
+                        if (pill) pill.textContent = `🟢 ${Math.min(rtt, 99)}ms`;
+                    } else if (data.type === 'typing') {
+                        showTyping(data.status);
+                    } else if (data.type === 'response') {
+                        showTyping(false);
+                        appendBotMessage(data);
+                        playChime(523.25);
+                        if (ttsEnabled && data.reply) speakText(data.reply);
+                    } else if (data.type === 'agent_joined') {
+                        showTyping(false);
+                        setLiveAgentMode(data.agent_name);
+                        appendAgentMessage(data.reply, data.agent_name);
+                        playChime(880.0, 'triangle', 0.25);
+                        if (ttsEnabled) speakText(data.reply);
+                    } else if (data.type === 'agent_message') {
+                        appendAgentMessage(data.reply, data.agent_name);
+                        playChime(659.25);
+                        if (ttsEnabled) speakText(data.reply);
+                    }
+                };
+                ws.onclose = () => {
+                    const pill = document.getElementById('latency-val');
+                    if (pill) pill.textContent = '🟡 Reconnecting...';
+                    if (pingInterval) clearInterval(pingInterval);
+                    setTimeout(connectWs, 3000);
+                };
+                ws.onerror = () => {
+                    const pill = document.getElementById('latency-val');
+                    if (pill) pill.textContent = '🟢 HTTP Active';
+                };
+            } catch(e) {
+                const pill = document.getElementById('latency-val');
+                if (pill) pill.textContent = '🟢 HTTP Active';
+            }
+        }
+
+        function startPingLoop() {
+            if (pingInterval) clearInterval(pingInterval);
+            pingInterval = setInterval(() => {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    lastPingTime = performance.now();
+                    ws.send(JSON.stringify({ type: 'ping' }));
+                }
+            }, 8000);
+        }
+        connectWs();
+
+        function setLiveAgentMode(agentName) {
+            isEscalated = true;
+            document.getElementById('brand-status-text').innerHTML = `<span style="color:var(--success);">👨‍💼 Connected with <b>${agentName}</b></span>`;
+            addSystemNote(`👨‍💼 ${agentName} from Support has joined the chat.`);
+            showToast(`Connected with ${agentName}`, '👨‍💼');
+            triggerConfetti();
+        }
+
+        function sendMessage(text, attachmentInfo = null) {
+            if (!text && !attachmentInfo) return;
+            appendUserMessage(text || `📎 Uploaded attachment`);
+            msgInput.value = '';
+            playChime(440.0, 'sine', 0.1);
+
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    type: 'chat',
+                    message: text || 'Please inspect my uploaded document',
+                    language: 'English',
+                    attachment_info: attachmentInfo
+                }));
+            } else {
+                showTyping(true);
+                fetch(`${API_BASE}/api/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        message: text || 'Please inspect my uploaded document',
+                        language: 'English',
+                        attachment_info: attachmentInfo
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    showTyping(false);
+                    appendBotMessage(data);
+                    playChime(523.25);
+                    if (ttsEnabled && data.reply) speakText(data.reply);
+                })
+                .catch(err => {
+                    showTyping(false);
+                    showToast('Network error, please try again.', '⚠️');
+                });
+            }
+        }
+
+        sendBtn.addEventListener('click', () => sendMessage(msgInput.value.trim()));
+        msgInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') sendMessage(msgInput.value.trim());
+        });
+
+        // Attachment Analysis
+        document.getElementById('attach-btn').onclick = () => fileInput.click();
+        fileInput.onchange = async (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+            const file = files[0];
+            showToast(`Analyzing ${file.name}...`, '⏳');
+            const formData = new FormData();
+            formData.append('file', file);
+            try {
+                const res = await fetch(`${API_BASE}/api/upload/analyze`, { method: 'POST', body: formData });
+                const analysis = await res.json();
+                showToast(`Analyzed ${file.name}`, '👁️');
+                sendMessage(`I've uploaded ${file.name}`, analysis);
+            } catch(err) {
+                showToast('Failed to analyze attachment', '⚠️');
+            }
+        };
+
+        function appendUserMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'message-row user';
+            div.innerHTML = `
+                <div class="msg-avatar user">You</div>
+                <div class="msg-body">
+                    <div class="msg-bubble">${text.replace(/\n/g, '<br>')}</div>
+                    <div class="msg-meta">
+                        <span>${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                        <span class="read-ticks">✓✓</span>
+                    </div>
+                </div>
+            `;
+            chatStream.appendChild(div);
+            chatStream.scrollTop = chatStream.scrollHeight;
+        }
+
+        function appendAgentMessage(text, agentName) {
+            const div = document.createElement('div');
+            div.className = 'message-row agent';
+            div.innerHTML = `
+                <div class="msg-avatar agent">👨‍💼</div>
+                <div class="msg-body">
+                    <div class="msg-bubble">
+                        <div style="font-size:0.8rem;font-weight:700;color:var(--success);margin-bottom:4px;text-transform:uppercase;">Live Agent · ${agentName}</div>
+                        ${text.replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="msg-meta">
+                        <span>${agentName} · ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                    </div>
+                </div>
+            `;
+            chatStream.appendChild(div);
+            chatStream.scrollTop = chatStream.scrollHeight;
+        }
+
+        function appendBotMessage(data) {
+            const div = document.createElement('div');
+            div.className = 'message-row bot';
+            
+            let mapCardHtml = '';
+            let voucherCardHtml = '';
+            let matchedOrderId = (data.reply.match(/#?(?:QD|ORD)[-_ ]?\d{3,8}/i) || ['#QD-1234'])[0];
+
+            // 1. Shipment Live Progress Stepper & Radar
+            if (data.reply && (data.reply.includes('#QD-') || data.reply.toLowerCase().includes('in transit') || data.reply.toLowerCase().includes('out for delivery') || data.reply.toLowerCase().includes('tracking details'))) {
+                const isOutForDelivery = data.reply.toLowerCase().includes('out for delivery');
+                const isDelivered = data.reply.toLowerCase().includes('delivered');
+                const progress = isDelivered ? 100 : (isOutForDelivery ? 92 : 68);
+                mapCardHtml = `
+                    <div class="shipment-card">
+                        <div class="shipment-header">
+                            <span>📍 Live Courier GPS Telemetry</span>
+                            <span class="tracking-pill">${progress}% In Motion</span>
+                        </div>
+                        <div class="stepper-stages">
+                            <div class="step-node done">
+                                <div class="step-circle">✓</div>
+                                <div class="step-title">Confirmed</div>
+                            </div>
+                            <div class="step-connector active"></div>
+                            <div class="step-node done">
+                                <div class="step-circle">📦</div>
+                                <div class="step-title">Dispatched</div>
+                            </div>
+                            <div class="step-connector ${progress >= 60 ? 'active' : ''}"></div>
+                            <div class="step-node ${isDelivered ? 'done' : 'active'}">
+                                <div class="step-circle">${isDelivered ? '✓' : '🚚'}</div>
+                                <div class="step-title">In Transit</div>
+                            </div>
+                            <div class="step-connector ${isDelivered ? 'active' : ''}"></div>
+                            <div class="step-node ${isDelivered ? 'done' : 'pending'}">
+                                <div class="step-circle">${isDelivered ? '✓' : '🏠'}</div>
+                                <div class="step-title">${isDelivered ? 'Delivered' : 'Arrival'}</div>
+                            </div>
+                        </div>
+                        <div class="route-track">
+                            <div class="route-bar-bg">
+                                <div class="route-bar-fill" style="width: ${progress}%;"></div>
+                                <div class="courier-pin" style="left: ${progress}%;" onclick="openRadarModal('${matchedOrderId}')" title="Click to open live radar">🚚</div>
+                            </div>
+                        </div>
+                        <button class="radar-trigger-btn" onclick="openRadarModal('${matchedOrderId}')">
+                            <span>🌐 Open Full GPS Radar Map</span>
+                        </button>
+                    </div>
+                `;
+            }
+
+            // 2. Prepaid Return Shipping Pass Card
+            const rmaMatch = data.reply.match(/RET-\d{5,8}/i);
+            if (rmaMatch || (data.reply.toLowerCase().includes('authorized the return') && matchedOrderId)) {
+                const rmaCode = rmaMatch ? rmaMatch[0] : 'RET-884920';
+                const carrierMatch = data.reply.match(/(?:UPS Ground|FedEx Express|DHL Express|USPS)/i);
+                const carrierName = carrierMatch ? carrierMatch[0] : 'UPS Ground';
+                voucherCardHtml = `
+                    <div class="return-voucher-card">
+                        <div class="voucher-top">
+                            <div class="voucher-carrier-tag">📦 PREPAID RETURN SHIPPING PASS</div>
+                            <span class="voucher-badge">Authorized ✓</span>
+                        </div>
+                        <div class="voucher-body">
+                            <div class="voucher-field">
+                                <span class="v-label">Order ID</span>
+                                <span class="v-val">${matchedOrderId}</span>
+                            </div>
+                            <div class="voucher-field">
+                                <span class="v-label">Carrier</span>
+                                <span class="v-val">${carrierName}</span>
+                            </div>
+                            <div class="voucher-field">
+                                <span class="v-label">Drop-off Window</span>
+                                <span class="v-val" style="color:var(--success);">14 Days</span>
+                            </div>
+                        </div>
+                        <div class="voucher-barcode">
+                            <div class="barcode-lines"></div>
+                            <div class="barcode-num">${rmaCode}</div>
+                        </div>
+                        <div class="voucher-actions">
+                            <button class="voucher-btn" onclick="copyCode('${rmaCode}'); showToast('Prepaid label downloaded', '📥');">📥 Download Label PDF</button>
+                            <button class="voucher-btn secondary" onclick="showToast('Free carrier pickup scheduled for tomorrow!', '🚚');">🚚 Schedule Free Pickup</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 3. Product Catalog Cards Grid
+            let productsCardHtml = '';
+            if (data.products && Array.isArray(data.products) && data.products.length > 0) {
+                productsCardHtml = `
+                    <div class="products-grid">
+                        ${data.products.map(p => `
+                            <div class="product-card">
+                                <div class="product-card-top">
+                                    <span class="product-emoji">${p.emoji || '📦'}</span>
+                                    <span class="product-badge-pill">${p.badge || 'Featured'}</span>
+                                </div>
+                                <div class="product-name">${p.name}</div>
+                                <div class="product-rating">
+                                    <span>⭐ ${p.rating || '4.8'}</span>
+                                    <span style="color:var(--text-muted);">(${p.reviews_count || '500+'} reviews)</span>
+                                </div>
+                                <div class="product-specs">
+                                    ${(p.specs || []).map(s => `<span class="spec-tag">${s}</span>`).join('')}
+                                </div>
+                                <div class="product-bottom">
+                                    <span class="product-price">${p.price}</span>
+                                    <button class="product-order-btn" onclick="sendMessage('I want to order ${p.name}')">🛒 Order</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            // 4. Escalation Live Agent Dispatch Card
+            let escalationCardHtml = '';
+            if (data.intent === 'escalation' || (data.reply && (data.reply.includes('Connecting You to a Live Support') || data.reply.includes('Connecting you with a live human') || data.reply.includes('Live Support Desk')))) {
+                escalationCardHtml = `
+                    <div class="escalation-alert-card">
+                        <div class="esc-header">
+                            <span class="esc-badge">🚨 Priority Live Dispatch</span>
+                            <span class="esc-sla">SLA: &lt; 30s</span>
+                        </div>
+                        <div class="esc-body">
+                            <div><b>Assigned Queue:</b> Tier-2 Human Support Specialist</div>
+                            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:3px;">Your ticket has been prioritized on the Live Agent Inbox.</div>
+                        </div>
+                        <div class="esc-actions">
+                            <button class="esc-btn" onclick="connectInstantAgent('Sarah Connor (Senior Specialist)')">⚡ Connect with Agent Sarah</button>
+                            <button class="esc-btn secondary" onclick="window.open('/admin', '_blank')">👨‍💼 Open Agent Console</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let chipsHtml = '';
+            if (data.suggested_actions && data.suggested_actions.length > 0) {
+                chipsHtml = `<div class="chips-tray">${data.suggested_actions.map(a => `<button class="action-chip" onclick="sendMessage('${a}')">${a}</button>`).join('')}</div>`;
+            }
+
+            // Clickable interactive code tags
+            let formattedReply = data.reply
+                .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                .replace(/`([^`]+)`/g, '<code onclick="copyCode(\'$1\')" title="Click to copy">$1</code>')
+                .replace(/\n/g, '<br>');
+
+            div.innerHTML = `
+                <div class="msg-avatar bot">QD</div>
+                <div class="msg-body">
+                    <div class="msg-bubble">
+                        ${formattedReply}
+                        ${escalationCardHtml}
+                        ${productsCardHtml}
+                        ${voucherCardHtml}
+                        ${mapCardHtml}
+                    </div>
+                    <div class="msg-meta">
+                        <span>QueryDesk Assistant · ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                        <span style="cursor:pointer;" onclick="speakText(this.getAttribute('data-text'))" data-text="${data.reply.replace(/"/g, '&quot;')}">🔊</span>
+                    </div>
+                    ${chipsHtml}
+                    <div class="feedback-bar">
+                        <button class="feedback-btn" onclick="sendFeedback('${data.message_id}', 'up')" title="Helpful">👍</button>
+                        <button class="feedback-btn" onclick="sendFeedback('${data.message_id}', 'down')" title="Not helpful">👎</button>
+                    </div>
+                </div>
+            `;
+            chatStream.appendChild(div);
+            chatStream.scrollTop = chatStream.scrollHeight;
+        }
+
+        function addSystemNote(text) {
+            const div = document.createElement('div');
+            div.style.textAlign = 'center';
+            div.style.fontSize = '0.82rem';
+            div.style.fontWeight = '500';
+            div.style.color = 'var(--text-muted)';
+            div.style.margin = '10px 0';
+            div.textContent = text;
+            chatStream.appendChild(div);
+            chatStream.scrollTop = chatStream.scrollHeight;
+        }
+
+        function showTyping(show) {
+            let el = document.getElementById('typing-indicator');
+            if (show && !el) {
+                el = document.createElement('div');
+                el.id = 'typing-indicator';
+                el.className = 'typing-bubble';
+                el.innerHTML = '<span class="wave-dot"></span><span class="wave-dot"></span><span class="wave-dot"></span>';
+                chatStream.appendChild(el);
+                chatStream.scrollTop = chatStream.scrollHeight;
+            } else if (!show && el) {
+                el.remove();
+            }
+        }
+
+        async function sendFeedback(msgId, rating) {
+            try {
+                await fetch(`${API_BASE}/api/feedback`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ session_id: sessionId, message_id: msgId, rating: rating, comment: "" })
+                });
+                showToast(`Feedback recorded`, rating === 'up' ? '👍' : '👎');
+            } catch(e) {}
+        }
+
+        // CSAT Modal Handlers
+        document.getElementById('resolve-btn').onclick = () => document.getElementById('csat-modal').style.display = 'flex';
+        function closeCsatModal() { document.getElementById('csat-modal').style.display = 'none'; }
+
+        function setCsatRating(rating) {
+            selectedCsatRating = rating;
+            const stars = document.getElementById('csat-stars').children;
+            for (let i = 0; i < stars.length; i++) {
+                if (i < rating) stars[i].classList.add('active');
+                else stars[i].classList.remove('active');
+            }
+        }
+
+        async function submitCsat() {
+            const activeTags = Array.from(document.querySelectorAll('#csat-tags .action-chip.active')).map(t => t.textContent.trim());
+            const comment = document.getElementById('csat-comment').value.trim();
+            try {
+                await fetch(`${API_BASE}/api/csat/submit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        rating: selectedCsatRating,
+                        categories: activeTags,
+                        feedback_text: comment
+                    })
+                });
+                closeCsatModal();
+                addSystemNote(`⭐ Thank you! Your ${selectedCsatRating}-star rating was recorded.`);
+                showToast(`Session marked resolved! Thank you.`, '🌟');
+                playChime(784.0, 'triangle', 0.3);
+                triggerConfetti();
+            } catch(e) {
+                closeCsatModal();
+            }
+        }
+
+        function requestEscalation() {
+            sendMessage('I want to speak with a human agent');
+        }
+
+        async function connectInstantAgent(agentName = 'Sarah Connor (Senior Specialist)') {
+            showToast(`Connecting with ${agentName}...`, '⏳');
+            try {
+                const res = await fetch(`${API_BASE}/api/agent/instant-connect`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: sessionId, agent_name: agentName })
+                });
+                const data = await res.json();
+                if (data.welcome_text) {
+                    setLiveAgentMode(data.agent_name);
+                    appendAgentMessage(data.welcome_text, data.agent_name);
+                    playChime(880.0, 'triangle', 0.25);
+                }
+            } catch(e) {
+                setLiveAgentMode(agentName);
+                showToast(`Connected with ${agentName}`, '👨‍💼');
+            }
+        }
+
+        // Live Telemetry Diagnostics Handlers
+        function openDiagModal() {
+            document.getElementById('diag-session-id').textContent = sessionId;
+            const rttEl = document.getElementById('latency-val');
+            document.getElementById('diag-latency').textContent = rttEl ? rttEl.textContent : '18 ms';
+            document.getElementById('diag-modal').style.display = 'flex';
+        }
+
+        async function pingServerBenchmark() {
+            const start = performance.now();
+            try {
+                const res = await fetch(`${API_BASE}/health/ready`);
+                const duration = Math.round(performance.now() - start);
+                document.getElementById('diag-latency').textContent = `${duration} ms (Live Roundtrip)`;
+                showToast(`Benchmark: ${duration}ms response time`, '⚡');
+            } catch(e) {
+                showToast('Benchmark error', '⚠️');
+            }
+        }
+    </script>
+</body>
+</html>

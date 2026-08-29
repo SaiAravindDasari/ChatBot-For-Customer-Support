@@ -1,0 +1,431 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi",
+        "Hello",
+        "Hey there",
+        "Good morning",
+        "Good afternoon",
+        "Good evening",
+        "Hey",
+        "Is anyone there?",
+        "Greetings",
+        "Hello chatbot",
+        "Hi there, I need some help",
+        "Hey, can you assist me?",
+        "Start chat",
+        "Hi QueryDesk",
+        "Howdy",
+        "Hello support team",
+        "Anyone available to help?",
+        "Hi, are you a bot or human?",
+        "Good day",
+        "Hey support"
+      ],
+      "responses": [
+        "Hello! Welcome to Customer Support. How can I help you today?",
+        "Hi there! I'm your virtual support assistant. What can I assist you with today?",
+        "Greetings! How may I assist you with your orders, account, or questions today?",
+        "Hello! Thanks for reaching out. Please let me know what you need help with."
+      ]
+    },
+    {
+      "tag": "farewell",
+      "patterns": [
+        "Bye",
+        "Goodbye",
+        "See you later",
+        "Thanks, bye",
+        "Have a good day",
+        "That's all for now, thanks",
+        "Talk to you later",
+        "I'm done",
+        "Nothing else needed, goodbye",
+        "Bye bye",
+        "Catch you later",
+        "Have a nice weekend",
+        "End chat",
+        "Quit",
+        "Exit conversation",
+        "Good night",
+        "All good now, thanks for the help!"
+      ],
+      "responses": [
+        "Thank you for contacting support! Have a wonderful day!",
+        "Goodbye! Please feel free to reach out if you have any further questions.",
+        "Take care! Don't hesitate to message us again if you need any more assistance.",
+        "Have a great day ahead! Thank you for choosing us."
+      ]
+    },
+    {
+      "tag": "order_status",
+      "patterns": [
+        "Where is my order?",
+        "Where is my order #QD-5678?",
+        "Where is my order #QD-4521?",
+        "Where is my order #QD-1234?",
+        "Track my package",
+        "Check order status",
+        "What is the status of my order #QD-1234?",
+        "When will my order arrive?",
+        "Has my shipment gone out yet?",
+        "I want to track order ORD-9921",
+        "Can you check if my order has shipped?",
+        "Order delivery update",
+        "Where is package #QD-8842?",
+        "Is my order on the way?",
+        "I placed an order yesterday, where is it?",
+        "Track shipment for order 54321",
+        "Delivery status for order ORD-1029",
+        "Check tracking number",
+        "Why is my order delayed?",
+        "My order status says processing",
+        "Can you look up order QD-4401?",
+        "Find my order status",
+        "When is estimated delivery for my order?"
+      ],
+      "responses": [
+        "I can help you check your order status! Please provide your Order ID (e.g., #QD-1234 or ORD-5678).",
+        "To track your package, could you share your order number?",
+        "I'd be glad to look into your shipment. Please enter your order ID.",
+        "Sure thing! Please share your order number and I'll fetch the latest tracking details for you."
+      ]
+    },
+    {
+      "tag": "return_request",
+      "patterns": [
+        "I want to return an item",
+        "How do I start a return?",
+        "Can I return my order?",
+        "Return policy for damaged goods",
+        "I received the wrong item and want to return it",
+        "Process a return for order ORD-4567",
+        "How many days do I have to return a product?",
+        "Generate a return shipping label",
+        "I need to return product SKU-8890",
+        "The item is defective, I want to send it back",
+        "How can I return an unwanted item?",
+        "Where do I drop off my return package?",
+        "Initiate a return request",
+        "Return merchandise authorization",
+        "Can I exchange or return my purchase?",
+        "I want to return this shirt because it doesn't fit",
+        "Return instructions needed",
+        "How do I return item from order #QD-7890?"
+      ],
+      "responses": [
+        "We offer a 30-day return policy for most items in original condition. To start a return, please provide your Order ID and the reason for the return.",
+        "I can assist you with initiating a return. Could you please provide your Order ID and mention which item you'd like to return?",
+        "Sorry to hear the item didn't work out. Please provide your order number and the reason for the return to get a prepaid return label.",
+        "You can return items within 30 days of delivery. Please share your Order ID so we can start the return process."
+      ]
+    },
+    {
+      "tag": "refund_status",
+      "patterns": [
+        "Where is my refund?",
+        "How long does a refund take?",
+        "When will I get my money back?",
+        "Refund status for order #QD-5566",
+        "I haven't received my refund yet",
+        "Check refund for returned order ORD-3321",
+        "Has my refund been processed?",
+        "Why is my refund taking so long?",
+        "When will the refund show up on my credit card?",
+        "Did you receive my returned item and issue refund?",
+        "Status of refund for transaction TXN-9988",
+        "I was promised a refund last week",
+        "Money back status check",
+        "How many business days for refund to reflect?",
+        "Refund not credited to my bank account",
+        "Check if my return refund was approved"
+      ],
+      "responses": [
+        "Refunds typically take 5-7 business days to process once we receive your return. Please share your Order ID or email address to check your refund status.",
+        "I'd be happy to check your refund status. Please provide your Order ID or the email associated with the purchase.",
+        "Once a refund is issued, it usually appears on your original payment method in 3 to 5 business days. Let me know your order number to look up the transaction details.",
+        "Let me investigate your refund. Could you provide your Order ID or Transaction ID?"
+      ]
+    },
+    {
+      "tag": "billing_issue",
+      "patterns": [
+        "I have a question about a charge on my bill.",
+        "I have a question about my bill",
+        "I was charged twice for my order",
+        "There is an incorrect charge on my credit card",
+        "Why was I billed extra?",
+        "Billing error on my recent invoice",
+        "Double charge on order #QD-3412",
+        "Incorrect total amount charged",
+        "I see an unauthorized transaction from your store",
+        "Charged for an item I cancelled",
+        "Dispute a charge on transaction TXN-1029",
+        "Why did my subscription renew automatically?",
+        "Need an updated invoice or receipt",
+        "Price difference charged incorrectly",
+        "Sales tax charged is wrong",
+        "Payment went through but no confirmation received",
+        "Billing dispute for order ORD-7788",
+        "Overcharged on shipping fees"
+      ],
+      "responses": [
+        "I apologize for any billing discrepancies. Please provide your Order ID or Transaction ID so we can investigate the charge immediately.",
+        "Billing accuracy is our top priority. Could you share your order number or invoice number along with details of the discrepancy?",
+        "Let me look into this charge for you. Please provide your Order ID or billing email address.",
+        "We take billing issues very seriously. Please provide your transaction details and we will audit the charge and issue any necessary adjustments."
+      ]
+    },
+    {
+      "tag": "technical_issue",
+      "patterns": [
+        "I'm running into a technical problem with the product.",
+        "I am running into a technical issue",
+        "Technical problem with product or website",
+        "The website is giving me an error",
+        "The login page is throwing a 500 error",
+        "Checkout page keeps freezing",
+        "Payment gateway is failing with error 500",
+        "The mobile app keeps crashing",
+        "I am getting an error when applying discount code",
+        "Shopping cart is empty even after adding items",
+        "Website error 404 page not found",
+        "Button is not clickable on checkout",
+        "I cannot upload my document or image",
+        "Session expired repeatedly",
+        "Page won't load properly on Chrome",
+        "Getting security verification loop",
+        "Technical glitch during order placement",
+        "Audio or video not playing",
+        "Two-factor authentication code is not working"
+      ],
+      "responses": [
+        "I'm sorry you're experiencing technical difficulties. Could you please tell me which device, browser, or error message you're seeing?",
+        "Let's get this technical issue resolved. You can try clearing your browser cache and cookies, or share the exact error message with me.",
+        "We apologize for the glitch. Please let me know what page or action caused the issue so I can report it to our engineering team or help you bypass it.",
+        "Technical issues can be frustrating! Please share the error code or screenshot details so I can guide you through a fix."
+      ]
+    },
+    {
+      "tag": "account_help",
+      "patterns": [
+        "I need help with my account settings.",
+        "Account help and profile settings",
+        "I forgot my password",
+        "How do I reset my password?",
+        "I can't log in to my account",
+        "Cannot access my account",
+        "Change my account email address",
+        "Update my shipping address in account settings",
+        "How do I delete my account?",
+        "Account locked due to too many login attempts",
+        "How do I enable two-factor authentication?",
+        "I want to change my phone number on file",
+        "Merge two customer accounts",
+        "Can't receive password reset email",
+        "How do I update my profile details?",
+        "Manage email subscription preferences",
+        "Unlock my user account",
+        "View past order history in my profile",
+        "My username is not recognized"
+      ],
+      "responses": [
+        "I can help with your account settings. If you need a password reset, click 'Forgot Password' on the login page or share your registered email address.",
+        "To assist with your account, please provide your registered email address or username.",
+        "You can manage your profile, addresses, and security settings directly from the 'My Account' tab, or let me know what specific change you'd like to make.",
+        "For account security and updates, please let me know your account email so I can assist you further."
+      ]
+    },
+    {
+      "tag": "shipping_info",
+      "patterns": [
+        "What are your shipping rates?",
+        "Do you offer free shipping?",
+        "How long does standard delivery take?",
+        "Do you ship internationally?",
+        "What express shipping options are available?",
+        "Can I change my shipping address after ordering?",
+        "Which shipping carriers do you use?",
+        "Do you ship to PO boxes or APO addresses?",
+        "Shipping cost to Canada or UK",
+        "Is same-day or next-day delivery offered?",
+        "Customs fees and import taxes for international orders",
+        "How is fragile shipping handled?",
+        "What are the delivery cutoff times for overnight shipping?",
+        "Why is shipping so expensive?",
+        "Do you require a signature on delivery?",
+        "Can I hold package at a carrier facility?"
+      ],
+      "responses": [
+        "We offer standard shipping (3-5 business days) and express shipping (1-2 business days). Standard shipping is free on orders over $50!",
+        "We ship both domestically and internationally to over 80 countries. Delivery times vary between 3 to 14 business days depending on location.",
+        "Orders are shipped via FedEx, UPS, and USPS. You will receive a tracking link via email as soon as your package dispatches.",
+        "You can view all shipping speeds and rates at checkout. If you need to change your address on an existing order, please provide your Order ID as soon as possible."
+      ]
+    },
+    {
+      "tag": "cancel_order",
+      "patterns": [
+        "I want to cancel my order",
+        "Cancel order #QD-9012 immediately",
+        "Can I stop my order from shipping?",
+        "I ordered by mistake, please cancel",
+        "How do I cancel an order I just placed?",
+        "Cancel item from order ORD-2211",
+        "I want to cancel order 88412",
+        "Is it too late to cancel my purchase?",
+        "Stop shipment for order #QD-1144",
+        "Cancel my accidental order",
+        "I changed my mind, cancel order please",
+        "Abort recent order",
+        "Need to cancel order before it ships",
+        "Can I modify or cancel my order?",
+        "Cancel order ORD-6543 and refund me",
+        "Please revoke my pending order"
+      ],
+      "responses": [
+        "Orders can be cancelled within 1 hour of placement before they are processed in our warehouse. Please provide your Order ID to request cancellation.",
+        "I can help you attempt to cancel your order. Please share your Order ID (e.g., #QD-1234).",
+        "Let me look up your order to see if it's still eligible for cancellation. What is your Order ID?",
+        "To cancel an order, please confirm your Order ID and confirm that you wish to proceed with the cancellation."
+      ]
+    },
+    {
+      "tag": "payment_methods",
+      "patterns": [
+        "What payment methods do you accept?",
+        "Can I pay with PayPal?",
+        "Do you accept Apple Pay or Google Pay?",
+        "Can I use a gift card and credit card together?",
+        "Do you accept cash on delivery (COD)?",
+        "Are prepaid debit cards accepted?",
+        "Can I pay in installments with Klarna or Afterpay?",
+        "Do you accept cryptocurrency or Bitcoin?",
+        "Is my credit card information secure?",
+        "Can I pay with American Express or Discover?",
+        "How do I apply a promotional coupon code?",
+        "Why is my payment method declined?",
+        "Can I save multiple credit cards to my wallet?",
+        "Do you support bank wire transfers?",
+        "Payment options for business invoicing",
+        "Can I split payment between two cards?"
+      ],
+      "responses": [
+        "We accept Visa, MasterCard, American Express, Discover, PayPal, Apple Pay, Google Pay, and Buy Now Pay Later options like Klarna and Afterpay.",
+        "You can pay using major credit/debit cards, PayPal, digital wallets, or gift cards during checkout. All transactions are 256-bit SSL encrypted.",
+        "We support all major payment providers including credit cards, digital wallets, and flexible installment plans. We do not currently accept cash on delivery or crypto.",
+        "During checkout, you can choose from credit card, PayPal, Apple Pay, Google Pay, or installment payments through Klarna."
+      ]
+    },
+    {
+      "tag": "product_inquiry",
+      "patterns": [
+        "Do you have this item in stock?",
+        "When will SKU-1049 be back in stock?",
+        "What are the specifications of this product?",
+        "Is this item covered under warranty?",
+        "What size should I order?",
+        "Do you offer bulk discounts or wholesale pricing?",
+        "Is this product compatible with Mac and Windows?",
+        "Where are your products manufactured?",
+        "What material is this made from?",
+        "Can you send me a product user manual?",
+        "Are your products eco-friendly or organic?",
+        "Does this product come with batteries included?",
+        "Tell me more about product SKU-3301",
+        "What accessories come in the box?",
+        "Are there color variations available for this model?",
+        "Is there a price match guarantee on this item?"
+      ],
+      "responses": [
+        "I can help with product specifications, availability, and warranty details! Please provide the product name or SKU.",
+        "All our products come with a 1-year limited warranty and 30-day money-back guarantee. What specific product details are you looking for?",
+        "Please let me know the product name, SKU, or link, and I'll find all the dimensions, compatibility, and stock information for you.",
+        "I'd love to help you find the right product. Could you share the product title or SKU number you're inquiring about?"
+      ]
+    },
+    {
+      "tag": "escalation",
+      "patterns": [
+        "I want to speak with a human",
+        "Transfer me to a live agent",
+        "Connect me to customer service representative",
+        "Let me talk to a real person",
+        "Your answers are not helpful, get me an agent",
+        "I need a manager",
+        "Escalate this issue immediately",
+        "Speak to human support",
+        "Can I talk to a supervisor?",
+        "Live chat agent please",
+        "Bot is not understanding, human please",
+        "Give me phone number for live support",
+        "Escalate ticket to level 2 support",
+        "I demand to speak to your manager",
+        "Operator please",
+        "Get me someone who can actually solve this"
+      ],
+      "responses": [
+        "I understand you'd like to speak with a human agent. I am connecting you to our live support team right away.",
+        "Certainly. Let me transfer you to a live support representative who can assist you further with your inquiry.",
+        "I'm escalating your request to a specialist now. A member of our support team will take over this conversation shortly.",
+        "No problem! I've flagged this conversation for a human supervisor. Please stay on the line."
+      ]
+    },
+    {
+      "tag": "complaint",
+      "patterns": [
+        "I am extremely angry with your service",
+        "This is the worst customer service ever",
+        "My order was completely ruined and delivered broken",
+        "Your company scammed me",
+        "I've been waiting for three weeks and nothing arrived",
+        "Unacceptable service, I will report to BBB",
+        "I am very disappointed with the product quality",
+        "You charged me without my permission and refuse to help",
+        "Rude support representative last time",
+        "My package was delivered to the wrong address",
+        "Terrible experience, I want compensation",
+        "I have been transferred five times with no resolution",
+        "This product is totally useless junk",
+        "I want to file a formal complaint",
+        "Fix this immediately or I am filing a credit card chargeback",
+        "I am dissatisfied with how my issue was handled"
+      ],
+      "responses": [
+        "I am genuinely sorry for your frustrating experience. Your satisfaction is very important to us, and I want to make this right. Please share your order or account details so I can prioritize a resolution.",
+        "I truly apologize for the inconvenience and distress this has caused. Let me immediately escalate your case to our senior customer care team.",
+        "We hold ourselves to high standards and clearly fell short here. Please provide your order or transaction ID so we can investigate and provide a full resolution or compensation.",
+        "I hear your frustration and sincerely apologize. Let me connect you with a supervisor right now to address this immediately."
+      ]
+    },
+    {
+      "tag": "positive_feedback",
+      "patterns": [
+        "Thank you so much, that solved my problem!",
+        "You are very helpful",
+        "Great customer service",
+        "Awesome assistance, thanks!",
+        "I really appreciate your quick help",
+        "That was fast and easy",
+        "You're the best support bot",
+        "5 stars service!",
+        "Thanks for clearing that up",
+        "Excellent support, keep it up!",
+        "Super helpful answer",
+        "Solved my issue completely, thank you",
+        "Wonderful experience today",
+        "Thank you for the quick turnaround",
+        "I love this chatbot, very smart",
+        "Appreciate the friendly help!"
+      ],
+      "responses": [
+        "You're very welcome! I'm glad I could help. Please let me know if you need anything else.",
+        "Thank you for your kind words! We're always here to assist you whenever you need us.",
+        "Happy to help! Have a fantastic day ahead!",
+        "It was my pleasure! Don't hesitate to reach out if you have any other questions."
+      ]
+    }
+  ]
+}

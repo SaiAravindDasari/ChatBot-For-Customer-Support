@@ -1,0 +1,472 @@
+{
+  "articles": [
+    {
+      "id": "kb-001",
+      "category": "Orders & Tracking",
+      "title": "How to Track Your Order in Real Time",
+      "content": "To track your package, locate the tracking link sent to your registered email address upon dispatch, or log in to your account and navigate to the 'My Orders' dashboard. Each order displays a live status badge (Processing, Packed, In Transit, Out for Delivery, or Delivered) along with the associated carrier tracking number.\n\nIf your tracking number shows no updates immediately after receiving your shipping confirmation email, please allow 24 to 48 hours for the carrier (FedEx, UPS, or USPS) to scan the package into their regional sorting hub. Once scanned, step-by-step transit checkpoints and estimated arrival dates will update automatically.",
+      "tags": [
+        "tracking",
+        "order status",
+        "shipment",
+        "carrier",
+        "delivery date"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-002",
+      "category": "Orders & Tracking",
+      "title": "Understanding Order Statuses and Processing Times",
+      "content": "Every purchase progresses through several distinct milestones. 'Processing' indicates our warehouse has received your payment and is picking your items. 'Packed' indicates your parcel is boxed and awaiting carrier pickup. 'In Transit' signifies the carrier is transporting the parcel to your local distribution center.\n\nStandard orders are processed within 1 to 2 business days (excluding weekends and statutory holidays). During peak seasonal volume such as Black Friday or Cyber Monday, order processing may take up to 3 business days before shipping carrier handoff.",
+      "tags": [
+        "order status",
+        "processing time",
+        "warehouse",
+        "transit",
+        "fulfillment"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "kb-003",
+      "category": "Orders & Tracking",
+      "title": "Modifying or Changing Items in a Placed Order",
+      "content": "Once an order is submitted, our automated fulfillment center begins processing it almost immediately to ensure the fastest delivery possible. As a result, individual items, sizes, colors, or quantities cannot be edited directly once the checkout process is complete.\n\nIf you need to change your order, you can cancel the current order within 60 minutes of placement (if still in 'Processing' status) and place a new order with your desired items. If the 60-minute cancellation window has passed, you may return unwanted items using our hassle-free return portal once they arrive.",
+      "tags": [
+        "modify order",
+        "change items",
+        "order edit",
+        "update quantity"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "kb-004",
+      "category": "Orders & Tracking",
+      "title": "How to Cancel an Accidental or Unwanted Order",
+      "content": "You can cancel any order free of charge within 60 minutes of placement, provided it has not yet moved into the 'Packed' or 'Shipped' fulfillment phase. To cancel, visit your 'My Orders' section, select the order details, and click the 'Cancel Order' button.\n\nIf your order has already been processed or shipped by the carrier, cancellation is no longer possible. However, you can reject delivery when the courier arrives or generate a free return shipping label through our Online Return Center once the package reaches you.",
+      "tags": [
+        "cancel order",
+        "cancellation",
+        "accidental purchase",
+        "stop shipment"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-005",
+      "category": "Orders & Tracking",
+      "title": "What to Do If Your Order is Marked Delivered but Not Received",
+      "content": "Occasionally, shipping carriers may scan a package as 'Delivered' up to 24 hours before actual drop-off, or leave it in a secure location such as a side porch, parcel locker, or building leasing office. First, please verify the exact delivery address on your order receipt and check around your property and with neighbors.\n\nIf 24 hours have passed since the delivered notification and you still cannot locate your parcel, please contact our support team immediately. We will initiate a formal trace investigation with the carrier and provide an expedited replacement or full refund.",
+      "tags": [
+        "missing package",
+        "lost delivery",
+        "stolen package",
+        "carrier trace",
+        "delivered not received"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-006",
+      "category": "Returns & Exchanges",
+      "title": "Comprehensive 30-Day Return Policy",
+      "content": "We offer a 30-day money-back guarantee for all eligible products. Items must be returned in their original condition, unwashed, unworn, and with all original manufacturer tags and packaging intact. Return shipping is free for all domestic returns within the continental United States.\n\nCertain items are non-returnable due to health and safety regulations, including opened hygiene products, customized/engraved merchandise, and final-sale clearance items. Defective or incorrect items are always fully covered regardless of the standard exclusions.",
+      "tags": [
+        "return policy",
+        "30 day return",
+        "eligibility",
+        "return guidelines",
+        "non-returnable"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-007",
+      "category": "Returns & Exchanges",
+      "title": "Step-by-Step Guide to Returning an Item",
+      "content": "Initiating a return is simple through our Online Return Center. Navigate to the returns page, enter your Order ID (e.g. #QD-1234) and account email address, and select the items you wish to return along with the primary reason.\n\nOnce submitted, download and print the prepaid carrier shipping label provided. Securely repack the item in its original box, attach the label over any older shipping barcode, and drop off the package at any authorized carrier drop-off location or schedule a carrier pickup.",
+      "tags": [
+        "how to return",
+        "return label",
+        "prepaid label",
+        "return instructions"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-008",
+      "category": "Returns & Exchanges",
+      "title": "Product Exchanges and Replacements",
+      "content": "If you need a different size, color, or a replacement for a defective unit, we offer rapid direct exchanges. When initiating your return in the portal, select 'Exchange for Different Size/Color' rather than 'Refund to Original Payment'.\n\nTo ensure you do not miss out on stock availability, we offer Instant Exchanges: we dispatch your new replacement item immediately upon your initial carrier drop-off scan, without waiting for the returned package to arrive back at our warehouse.",
+      "tags": [
+        "exchange",
+        "replacement",
+        "swap size",
+        "instant exchange",
+        "exchange an item",
+        "can I exchange",
+        "exchange policy"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "kb-009",
+      "category": "Returns & Exchanges",
+      "title": "Handling Damaged, Faulty, or Defective Items",
+      "content": "If you receive an item that arrived damaged in transit or has a manufacturing defect, please notify us within 14 days of receipt. We apologize for the inconvenience and will make it right without requiring you to pay any return shipping costs.\n\nPlease snap a clear photo or short video showing the damage or defect and attach it in the chat or email to support. Our team will promptly review the evidence and issue a replacement dispatch or a full refund back to your original payment method.",
+      "tags": [
+        "damaged item",
+        "defective",
+        "broken on arrival",
+        "warranty claim",
+        "faulty"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-010",
+      "category": "Refunds & Billing",
+      "title": "Refund Processing Timelines and Payment Methods",
+      "content": "Once your returned package arrives at our distribution warehouse, our quality assurance team inspects and processes it within 2 business days. As soon as the inspection is approved, your refund is automatically issued to your original method of payment.\n\nCredit and debit card refunds typically take 3 to 7 business days to reflect on your bank statement, depending on your financial institution. Payments made via PayPal, Apple Pay, or Store Credit are typically credited within 24 hours of approval.",
+      "tags": [
+        "refund time",
+        "money back",
+        "bank processing",
+        "credit card refund",
+        "paypal refund"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-011",
+      "category": "Refunds & Billing",
+      "title": "How to Resolve Duplicate or Incorrect Billing Charges",
+      "content": "If you notice an unexpected or duplicate charge on your credit card statement, this is often a temporary authorization hold placed by your bank during checkout attempts. Pending authorizations usually drop off automatically within 48 to 72 hours without settling.\n\nHowever, if multiple settled charges appear on your statement for a single order, please contact our billing department immediately with your Transaction ID or the last 4 digits of the charged card. We will audit your account records and immediately void or refund any accidental duplicate transaction.",
+      "tags": [
+        "double charge",
+        "billing error",
+        "authorization hold",
+        "overcharge",
+        "duplicate billing"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-012",
+      "category": "Refunds & Billing",
+      "title": "Sales Tax, Customs Duties, and Invoicing",
+      "content": "Sales tax is calculated automatically at checkout based on applicable state, provincial, and local tax laws governing the destination delivery address. Tax rates are clearly itemized on your pre-order confirmation page before you submit payment.\n\nFor international shipments, customs duties and import value-added taxes (VAT) may be assessed by your local customs authority upon arrival. You can download official PDF tax invoices anytime directly from the 'Order History' section of your profile.",
+      "tags": [
+        "sales tax",
+        "customs duties",
+        "vat",
+        "invoice",
+        "receipt",
+        "taxes"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "kb-013",
+      "category": "Shipping & Delivery",
+      "title": "Shipping Methods, Costs, and Delivery Speeds",
+      "content": "We offer three primary shipping tiers: Standard Domestic Shipping (3-5 business days), Expedited 2-Day Air (2 business days), and Priority Overnight (next business day by 4 PM local time). All domestic orders with a subtotal exceeding $50 automatically qualify for Free Standard Shipping.\n\nOrders placed before 2:00 PM EST Monday through Friday are dispatched the very same day. Weekend orders or orders placed on national public holidays will be processed and shipped on the following business day.",
+      "tags": [
+        "shipping rates",
+        "delivery speeds",
+        "free shipping",
+        "overnight",
+        "express delivery"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-014",
+      "category": "Shipping & Delivery",
+      "title": "International Shipping Rates and Regional Restrictions",
+      "content": "We ship to over 80 countries worldwide using DHL Express and FedEx International Priority. International shipping rates are calculated dynamically in real time based on weight, dimensions, and the destination country.\n\nInternational delivery typically takes between 4 and 12 business days depending on customs processing speeds. Please note that certain hazardous materials, lithium-ion battery configurations, and oversized furniture cannot be shipped internationally due to air transport safety guidelines.",
+      "tags": [
+        "international shipping",
+        "dhl",
+        "fedex international",
+        "global delivery",
+        "customs"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "kb-015",
+      "category": "Shipping & Delivery",
+      "title": "Changing Shipping Address After Order Placement",
+      "content": "If you entered an incorrect shipping address or moved recently, you can update your address if your order is still in the 'Order Placed' or 'Processing' status. Reach out via chat or phone immediately to have an agent update the destination address before fulfillment.\n\nIf the package has already left our facility and is in transit with the courier, we can submit a carrier intercept request to reroute the parcel. Carrier rerouting fees may apply depending on the shipping provider.",
+      "tags": [
+        "change address",
+        "reroute package",
+        "wrong shipping address",
+        "update address"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-016",
+      "category": "Shipping & Delivery",
+      "title": "Delivery to PO Boxes, APO/FPO Military Bases, and Lockers",
+      "content": "We proudly deliver to United States PO Boxes and APO/FPO/DPO military addresses via the United States Postal Service (USPS). Standard shipping must be selected during checkout for all military and PO box destinations as commercial carriers like UPS and FedEx cannot deliver to these locations.\n\nDeliveries to APO/FPO military bases typically require an additional 5 to 15 business days in transit due to Department of Defense mail routing and security protocols.",
+      "tags": [
+        "po box",
+        "apo",
+        "fpo",
+        "military shipping",
+        "usps delivery"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "kb-017",
+      "category": "Account & Security",
+      "title": "Resetting Forgotten Passwords and Account Recovery",
+      "content": "If you have trouble logging into your account, click on the 'Forgot Password' link on the sign-in page. Enter the email address associated with your profile, and a secure password reset token will be emailed to you within 60 seconds.\n\nIf you do not see the recovery email in your inbox, make sure to inspect your Spam or Junk folders. For security reasons, password reset links expire after 30 minutes. If your link expires, simply request a new link on the login page.",
+      "tags": [
+        "password reset",
+        "forgot password",
+        "account recovery",
+        "login help",
+        "unlock account"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-018",
+      "category": "Account & Security",
+      "title": "Enabling Two-Factor Authentication (2FA) for Enhanced Security",
+      "content": "Protecting your customer account and payment data is paramount. We strongly recommend enabling Two-Factor Authentication (2FA) in your 'Account Settings > Security' preferences. We support standard TOTP authenticator apps like Google Authenticator, Authy, and 1Password.\n\nOnce activated, you will be prompted to enter a temporary 6-digit code whenever you sign in from an unrecognized browser or device. Backup recovery codes are generated during setup\u2014store these in a secure password manager.",
+      "tags": [
+        "two factor authentication",
+        "2fa",
+        "security",
+        "google authenticator",
+        "account security"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "kb-019",
+      "category": "Account & Security",
+      "title": "Updating Personal Details, Billing Addresses, and Saved Cards",
+      "content": "You can update your personal contact info, default shipping addresses, and saved payment methods at any time by navigating to the 'Profile' section under your account dashboard. You can store multiple shipping addresses and label them (e.g. Home, Office, Vacation).\n\nCredit and debit card numbers are never stored directly on our servers; they are securely tokenized using PCI-DSS Level 1 compliant payment vaulting. You can delete or add payment cards whenever you like.",
+      "tags": [
+        "profile update",
+        "saved cards",
+        "manage addresses",
+        "account settings",
+        "billing info"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "kb-020",
+      "category": "Account & Security",
+      "title": "Account Deletion and Privacy Data Requests (GDPR / CCPA)",
+      "content": "Under GDPR, CCPA, and applicable global privacy regulations, you have full rights to request a complete copy of your personal data or request permanent deletion of your account and personal identifiers from our databases.\n\nTo request data export or permanent deletion, navigate to 'Privacy Settings' in your account menu and click 'Request Account Deletion'. Our compliance team will process verified requests within 30 days and send a formal confirmation of erasure.",
+      "tags": [
+        "delete account",
+        "privacy",
+        "gdpr",
+        "ccpa",
+        "data erasure",
+        "data export"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "kb-021",
+      "category": "Payments & Promotions",
+      "title": "Accepted Payment Methods and Buy Now Pay Later (BNPL)",
+      "content": "We support a wide array of secure payment options to accommodate your preferences. We accept Visa, MasterCard, American Express, Discover, JCB, and Diners Club, as well as digital wallets including Apple Pay, Google Pay, and PayPal.\n\nFor flexible financing on eligible purchases over $35, you can select Klarna or Afterpay at checkout. These services allow you to split your purchase into 4 equal, interest-free installments paid every two weeks with zero added fees when paid on time.",
+      "tags": [
+        "payment methods",
+        "klarna",
+        "afterpay",
+        "apple pay",
+        "google pay",
+        "credit cards",
+        "bnpl"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-022",
+      "category": "Payments & Promotions",
+      "title": "Applying Promo Codes, Coupons, and Gift Cards",
+      "content": "Promotional discount codes and digital gift cards can be redeemed directly in your shopping bag or during the final checkout stage. Enter your promo code into the 'Gift Card or Promo Code' field and click 'Apply'.\n\nPlease note that most promotional codes cannot be combined with other sitewide discount codes or clearance markdowns unless explicitly specified in the terms and conditions. Gift card balances, however, can always be combined with any coupon or promotion.",
+      "tags": [
+        "promo code",
+        "coupon",
+        "gift card",
+        "discount",
+        "voucher",
+        "checkout code"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "kb-023",
+      "category": "Payments & Promotions",
+      "title": "Troubleshooting Declined Payments and Checkout Errors",
+      "content": "If your payment is declined during checkout, the most common causes include an incorrect billing ZIP code, mismatched CVV security code, or automated anti-fraud triggers by your issuing bank.\n\nDouble-check that the billing address entered on your order matches the exact address associated with your credit card account. If problems persist, contacting your credit card provider or attempting payment through PayPal or Apple Pay often resolves the restriction.",
+      "tags": [
+        "declined payment",
+        "card error",
+        "checkout failed",
+        "cvv mismatch",
+        "billing address error"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-024",
+      "category": "Payments & Promotions",
+      "title": "Price Match Guarantee and Post-Purchase Adjustments",
+      "content": "We strive to offer the most competitive prices in the industry. If you find an identical in-stock item advertised for a lower price by an authorized major retailer, we will gladly match that price prior to purchase or within 14 days of your delivery.\n\nTo request a price match adjustment, provide our support team with a live link to the qualifying competitor's product listing showing identical SKU, model, color, and warranty conditions. Approved adjustments are refunded to your original payment method.",
+      "tags": [
+        "price match",
+        "price adjustment",
+        "lower price",
+        "competitor price",
+        "guarantee"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "kb-025",
+      "category": "Technical Support",
+      "title": "Resolving Website Loading, Cart, and Browser Issues",
+      "content": "If you experience slow page load times, broken checkout buttons, or items disappearing from your cart, browser caching conflicts are often the root cause. Try doing a hard refresh (Ctrl + F5 on Windows or Cmd + Shift + R on macOS) or clearing your browser's cookies and cached images.\n\nWe recommend using the latest versions of Google Chrome, Mozilla Firefox, Safari, or Microsoft Edge. Disabling intrusive ad-blockers or browser extensions that block cookies will ensure uninterrupted checkout functionality.",
+      "tags": [
+        "browser error",
+        "cart empty",
+        "website glitch",
+        "cache clear",
+        "technical troubleshooting"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "kb-026",
+      "category": "Technical Support",
+      "title": "Mobile App Troubleshooting and Update Guide",
+      "content": "For the best mobile experience, always keep the QueryDesk Mobile App updated to the latest version available on the Apple App Store or Google Play Store. Updates include essential performance patches and security improvements.\n\nIf the application crashes upon startup or fails to refresh your feed, try force-closing the app, clearing the app storage cache from your device settings, or uninstalling and reinstalling the app.",
+      "tags": [
+        "mobile app",
+        "app crash",
+        "ios app",
+        "android app",
+        "update app"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "kb-027",
+      "category": "Technical Support",
+      "title": "Troubleshooting 2FA and Multi-Factor Authentication Issues",
+      "content": "If your two-factor authentication codes are being rejected as invalid, check that your device's internal system clock is synchronized to automatic time. Authenticator TOTP codes depend strictly on exact synchronized timestamps to validate.\n\nIf you have lost access to your authenticator device and do not have your backup recovery codes, contact support with proof of identity. Our identity verification team will guide you through a secure account recovery procedure.",
+      "tags": [
+        "2fa invalid",
+        "authenticator error",
+        "time sync",
+        "lost 2fa device",
+        "login security"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "kb-028",
+      "category": "Products & Warranties",
+      "title": "Standard Product Warranty Coverage and Claims",
+      "content": "All hardware and electronic products sold through our store are backed by a comprehensive 1-Year Limited Manufacturer Warranty. This warranty covers manufacturing defects, material failures, and component malfunctions under normal consumer use.\n\nDamage resulting from misuse, unauthorized modifications, liquid submersion (for non-waterproof items), or accidental drops is not covered under the standard warranty. To submit a warranty claim, provide your original Order ID and serial number to our technical support team.",
+      "tags": [
+        "warranty",
+        "manufacturer warranty",
+        "1 year warranty",
+        "warranty claim",
+        "repair"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-029",
+      "category": "Products & Warranties",
+      "title": "Product Sizing Guides, Dimensions, and Fit Advice",
+      "content": "To help you select the perfect size, every apparel and gear product page includes a dedicated 'Size & Fit Guide' link containing exact measurement charts in both inches and centimeters. We recommend measuring across your chest, waist, and hips before placing your order.\n\nCustomer reviews also feature helpful 'Fit True to Size' community polls. If you fall between two sizes, we generally recommend selecting the larger size for a more comfortable, relaxed fit.",
+      "tags": [
+        "sizing guide",
+        "dimensions",
+        "fit advice",
+        "measurements",
+        "clothing size"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "kb-030",
+      "category": "Products & Warranties",
+      "title": "Checking Product Stock Availability and Restock Notifications",
+      "content": "Real-time inventory levels are displayed directly on each item's product listing. If an item or specific size/color variation is labeled 'Out of Stock', you can click the 'Notify Me When Available' button on the page.\n\nEnter your email address or SMS phone number to receive an instant alert as soon as our warehouse restocks the item. Most popular out-of-stock products are replenished within 2 to 3 weeks.",
+      "tags": [
+        "stock availability",
+        "out of stock",
+        "restock notification",
+        "inventory",
+        "backorder"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "kb-031",
+      "category": "Products & Warranties",
+      "title": "Eco-Friendly Packaging, Sustainability, and Material Care",
+      "content": "We are dedicated to sustainable and ethical manufacturing. Over 90% of our packaging is made from 100% post-consumer recycled paper and biodegradable corrugated boxes. Our textile products use certified organic cotton and recycled synthetic fibers.\n\nTo maximize the lifespan of your products, please review the specific washing and care instructions printed on the garment care label. Machine washing in cold water and hang drying will prevent shrinkage and preserve vibrant colors.",
+      "tags": [
+        "sustainability",
+        "eco friendly",
+        "organic",
+        "product care",
+        "materials"
+      ],
+      "priority": 3
+    },
+    {
+      "id": "kb-032",
+      "category": "Customer Care & Escalations",
+      "title": "How to Escalate an Issue to Senior Customer Support Management",
+      "content": "We are committed to delivering five-star support. If you feel your issue has not been satisfactorily resolved by our automated assistant or first-line representatives, you may request an immediate escalation to a Senior Support Supervisor.\n\nYou can trigger an escalation at any point by typing 'Escalate to supervisor' or clicking the 'Speak to Agent' button. Our tier-2 management team reviews all escalated cases within 2 hours during business hours and provides direct phone or email follow-ups.",
+      "tags": [
+        "escalation",
+        "supervisor",
+        "complaint resolution",
+        "senior support",
+        "live agent"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "kb-033",
+      "category": "Customer Care & Escalations",
+      "title": "Customer Support Operating Hours, Channels, and Contact Details",
+      "content": "Our automated AI Assistant is available 24/7, 365 days a year to answer questions, track shipments, and process instant returns. Our live human support agents are available Monday through Friday from 8:00 AM to 8:00 PM EST, and Saturday through Sunday from 9:00 AM to 5:00 PM EST.\n\nYou can reach our live customer support team via live chat on our website, by email at support@querydesk.com, or toll-free by phone at 1-800-555-DESK (1-800-555-3375).",
+      "tags": [
+        "support hours",
+        "business hours",
+        "operating hours",
+        "hours of operation",
+        "contact us",
+        "phone number",
+        "email support",
+        "customer service"
+      ],
+      "priority": 1
+    }
+  ]
+}

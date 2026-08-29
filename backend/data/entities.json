@@ -1,0 +1,120 @@
+{
+  "entities": [
+    {
+      "name": "order_id",
+      "type": "regex",
+      "patterns": [
+        "#(?:QD|ORD|order)[-_ ]?\\d{4,8}",
+        "(?:QD|ORD|order)[-_ ]?\\d{4,8}",
+        "\\b(?:order|order #|order number|ord)\\s*#?\\s*([A-Za-z0-9\\-]{4,12})\\b",
+        "\\b[A-Z]{2,4}-\\d{4,8}\\b",
+        "\\b\\d{5,8}\\b"
+      ],
+      "examples": [
+        "#QD-1234",
+        "QD-8842",
+        "ORD-5678",
+        "ORD9921",
+        "order 1234",
+        "order #54321",
+        "#QD-9012",
+        "QD-4401"
+      ]
+    },
+    {
+      "name": "email",
+      "type": "regex",
+      "patterns": [
+        "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b"
+      ],
+      "examples": [
+        "customer@example.com",
+        "jane.doe@company.org",
+        "support_test12@domain.co.uk",
+        "alexander.hamilton@sub.domain.io"
+      ]
+    },
+    {
+      "name": "phone",
+      "type": "regex",
+      "patterns": [
+        "\\+?[1-9]\\d{0,3}[-.\\s]?\\(?\\d{1,4}\\)?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}",
+        "\\(?\\b[0-9]{3}\\)?[-.\\s]?[0-9]{3}[-.\\s]?[0-9]{4}\\b",
+        "\\b\\d{10}\\b",
+        "\\+1[-.\\s]?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}\\b",
+        "\\+\\d{1,3}[-.\\s]?\\d{9,12}\\b"
+      ],
+      "examples": [
+        "+1-800-555-0199",
+        "(555) 234-5678",
+        "555-876-5432",
+        "9876543210",
+        "+44 20 7946 0991",
+        "+91 98765 43210",
+        "+1 (555) 123-4567"
+      ]
+    },
+    {
+      "name": "transaction_id",
+      "type": "regex",
+      "patterns": [
+        "\\b(?:TXN|TRANS|TRX|INV|PAY)[-_]?[A-Za-z0-9]{4,12}\\b",
+        "\\btransaction\\s*#?\\s*([A-Za-z0-9\\-_]{4,16})\\b",
+        "\\bch_[0-9a-zA-Z]{16,32}\\b",
+        "\\bpi_[0-9a-zA-Z]{16,32}\\b"
+      ],
+      "examples": [
+        "TXN-9988",
+        "TXN-1029",
+        "TRANS-8877",
+        "INV-2024-001",
+        "PAY-44019",
+        "ch_3M4o9a2eZvKYlo2C0",
+        "pi_3N9m8b2eZvKYlo2C1"
+      ]
+    },
+    {
+      "name": "product_sku",
+      "type": "regex",
+      "patterns": [
+        "\\b(?:SKU|PROD|ITEM|MODEL)[-_]?[A-Za-z0-9]{3,10}\\b",
+        "\\b[A-Z]{2,4}-\\d{3,6}\\b",
+        "\\bsku\\s*#?\\s*([A-Za-z0-9\\-_]{3,12})\\b"
+      ],
+      "examples": [
+        "SKU-8890",
+        "SKU-1049",
+        "SKU-3301",
+        "PROD-9988",
+        "ITEM-502",
+        "MODEL-44X"
+      ]
+    },
+    {
+      "name": "person",
+      "type": "spacy",
+      "patterns": [
+        "PERSON"
+      ],
+      "examples": [
+        "John Doe",
+        "Sarah Smith",
+        "David Miller"
+      ]
+    },
+    {
+      "name": "date_time",
+      "type": "spacy",
+      "patterns": [
+        "DATE",
+        "TIME"
+      ],
+      "examples": [
+        "yesterday",
+        "tomorrow morning",
+        "next Monday",
+        "October 14th"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueryDesk — Enterprise Admin & Live Agent Console</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0a0f1d;
+            --bg-surface: #111827;
+            --bg-surface-elevated: #1f2937;
+            --bg-surface-glass: rgba(17, 24, 39, 0.95);
+            --bg-input: #1f2937;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --border-hover: rgba(59, 130, 246, 0.5);
+            --border-active: #3b82f6;
+            
+            --primary: #3b82f6;
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --primary-glow: rgba(59, 130, 246, 0.3);
+            --primary-light: rgba(59, 130, 246, 0.16);
+            
+            --accent-cyan: #06b6d4;
+            --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+            
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.3);
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.35);
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+            
+            --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
+            --shadow-glow: 0 0 25px -5px var(--primary-glow);
+            --shadow-card: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            
+            --transition-bounce: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: all 0.15s ease;
+        }
+
+        body.light {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-surface-elevated: #f1f5f9;
+            --bg-surface-glass: rgba(255, 255, 255, 0.96);
+            --bg-input: #f8fafc;
+            --border-color: #cbd5e1;
+            --border-hover: rgba(37, 99, 235, 0.4);
+            --border-active: #2563eb;
+            
+            --primary: #2563eb;
+            --primary-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            --primary-glow: rgba(37, 99, 235, 0.2);
+            --primary-light: rgba(37, 99, 235, 0.1);
+            
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --text-dim: #94a3b8;
+            
+            --shadow-subtle: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+            --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        body {
+            font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 15px;
+            line-height: 1.5;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+            color: inherit;
+            outline: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: var(--radius-full); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* Header Bar */
+        .admin-header {
+            height: 64px;
+            padding: 0 24px;
+            background: var(--bg-surface-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .brand-logo svg {
+            width: 20px;
+            height: 20px;
+            fill: #ffffff;
+        }
+
+        .brand-title {
+            font-weight: 800;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+            background: var(--bg-surface-elevated);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-button {
+            padding: 7px 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            transition: var(--transition-bounce);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-button:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-button.active {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            box-shadow: 0 2px 10px var(--primary-glow);
+        }
+
+        .badge-alert {
+            background: var(--danger);
+            color: #ffffff;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: var(--radius-full);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            box-shadow: 0 0 8px var(--danger-glow);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            padding: 5px 14px;
+            border-radius: var(--radius-full);
+            font-size: 0.84rem;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+        }
+
+        .user-pill:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-1px);
+        }
+
+        .user-avatar-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            transition: var(--transition-bounce);
+            font-size: 0.95rem;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Container Views */
+        .content-container {
+            padding: 28px;
+            max-width: 1480px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Stat Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            box-shadow: var(--shadow-subtle);
+            transition: var(--transition-bounce);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: var(--transition-bounce);
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .stat-number {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 2.1rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .stat-trend {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Charts Layout */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+
+        .panel-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .panel-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chart-box {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 18px;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--bg-surface-elevated); }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+        }
+
+        /* Status & Role Badges */
+        .badge {
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 0.72rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge.high { background: rgba(239, 68, 68, 0.14); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+        .badge.normal { background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-glow); }
+        .badge.role { background: var(--bg-surface-elevated); border: 1px solid var(--border-color); text-transform: uppercase; font-size: 0.68rem; font-weight: 700; }
+        .badge.sla-ok { background: rgba(16, 185, 129, 0.14); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge.sla-warn { background: rgba(245, 158, 11, 0.14); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge.sla-breach { background: rgba(239, 68, 68, 0.2); color: var(--danger); font-weight: 700; border: 1px solid var(--danger); animation: breachPulse 1.5s infinite; }
+
+        /* Live Customer Voice & CSAT Stream */
+        .csat-review-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 280px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .csat-review-item {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: var(--transition-bounce);
+        }
+
+        .csat-review-item:hover {
+            border-color: var(--border-hover);
+            transform: translateX(3px);
+        }
+
+        .csat-review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+        }
+
+        .csat-star-badge {
+            color: #f59e0b;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 2px;
+        }
+
+        .csat-review-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .csat-review-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .csat-tag-pill {
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            color: var(--text-muted);
+        }
+
+        /* Agent Live Workspace */
+        #agent-view, #crm-view, #kb-view { display: none; }
+        #agent-view { height: calc(100vh - 90px); }
+        .agent-3col-layout { display: flex; height: 100%; gap: 18px; }
+        
+        .ticket-list-panel {
+            width: 320px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .ticket-list-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-surface-elevated);
+        }
+
+        .ticket-items-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ticket-card {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .ticket-card:hover {
+            background: var(--bg-surface-elevated);
+        }
+
+        .ticket-card.active {
+            background: var(--bg-surface-elevated);
+            border-left: 4px solid var(--primary);
+        }
+
+        .ticket-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .ticket-preview {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Central Conversation Pane */
+        .chat-main-pane {
+            flex: 1;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .chat-pane-header {
+            padding: 16px 22px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-surface-elevated);
+        }
+
+        .agent-chat-stream {
+            flex: 1;
+            overflow-y: auto;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: var(--bg-base);
+        }
+
+        .c-bubble-row {
+            display: flex;
+            flex-direction: column;
+            max-width: 80%;
+            animation: messageEntry 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .c-bubble-row.user { align-self: flex-start; }
+        .c-bubble-row.bot { align-self: flex-start; opacity: 0.85; }
+        .c-bubble-row.agent { align-self: flex-end; }
+
+        .c-bubble {
+            padding: 12px 18px;
+            border-radius: var(--radius-lg);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .c-bubble-row.user .c-bubble {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+        }
+
+        .c-bubble-row.bot .c-bubble {
+            background: var(--bg-surface);
+            border: 1px dashed var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        .c-bubble-row.agent .c-bubble {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            font-weight: 500;
+            box-shadow: 0 4px 14px var(--primary-glow);
+        }
+
+        .c-meta {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .canned-macros-bar {
+            display: flex;
+            gap: 8px;
+            padding: 10px 18px;
+            overflow-x: auto;
+            background: var(--bg-surface-elevated);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .macro-pill {
+            padding: 6px 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-full);
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--primary);
+            transition: var(--transition-bounce);
+        }
+
+        .macro-pill:hover {
+            background: var(--primary-gradient);
+            border-color: transparent;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .agent-input-container {
+            padding: 14px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+            background: var(--bg-surface);
+        }
+
+        .agent-text-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            outline: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition-bounce);
+        }
+
+        .agent-text-input:focus {
+            border-color: var(--border-active);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+            background: var(--bg-surface);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: #ffffff;
+            padding: 11px 22px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.88rem;
+            box-shadow: var(--shadow-glow);
+            transition: var(--transition-bounce);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--primary-glow);
+        }
+
+        .takeover-button {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            color: #ffffff;
+            padding: 8px 18px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            font-size: 0.82rem;
+            box-shadow: 0 4px 14px var(--danger-glow);
+            transition: var(--transition-bounce);
+        }
+
+        /* AI Copilot Sidebar */
+        .copilot-sidebar {
+            width: 340px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .copilot-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-surface-elevated);
+        }
+
+        .copilot-body {
+            padding: 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .copilot-card {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .copilot-card-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .copilot-draft-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .copilot-draft-btn:hover {
+            border-color: var(--primary);
+            background: var(--bg-surface-glass);
+            transform: translateX(3px);
+        }
+
+        /* Modal Overlays */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            width: 480px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: var(--shadow-card);
+            animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .toast-shelf {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .toast-item {
+            background: var(--bg-surface-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 20px;
+            font-size: 0.86rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: toastEnter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: auto;
+        }
+
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+        @keyframes messageEntry { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastEnter { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes breachPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+    </style>
+</head>
+<body class="dark">
+    <div class="toast-shelf" id="toast-shelf"></div>
+
+    <header class="admin-header">
+        <div class="brand-container">
+            <div class="brand-logo">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.34 5L2 22l5.2-1.3A9.94 9.94 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+            </div>
+            <div class="brand-title">
+                QueryDesk
+                <span class="badge role">Console</span>
+            </div>
+        </div>
+        
+        <nav class="nav-tabs">
+            <button class="tab-button active" id="tab-analytics" onclick="switchTab('analytics')">
+                📊 Analytics
+            </button>
+            <button class="tab-button" id="tab-agent" onclick="switchTab('agent')">
+                👨‍💼 Live Agent Inbox <span class="badge-alert" id="escalated-badge" style="display:none;">0</span>
+            </button>
+            <button class="tab-button" id="tab-kb" onclick="switchTab('kb')">
+                📚 Knowledge Base CMS
+            </button>
+            <button class="tab-button" id="tab-crm" onclick="switchTab('crm')">
+                🔌 CRM & Integrations
+            </button>
+        </nav>
+
+        <div class="header-actions">
+            <a href="/metrics" target="_blank" class="badge role" style="text-decoration:none;" title="View Prometheus OpenMetrics">Prometheus 📈</a>
+            <div class="user-pill" id="user-badge-btn" onclick="openAuthModal()" title="Switch Account">
+                <div class="user-avatar-circle" id="user-avatar-initials">A</div>
+                <span id="user-name-label" style="font-weight:600;">Alex Admin</span>
+                <span class="badge role" id="user-role-label">admin</span>
+            </div>
+            <button class="btn-icon" id="theme-btn" title="Toggle Theme">☾</button>
+        </div>
+    </header>
+
+    <!-- Auth Switch Modal -->
+    <div class="modal-overlay" id="auth-modal" onclick="if(event.target===this) closeAuthModal()">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 1.25rem; font-weight: 700;">Switch Enterprise Account</h3>
+                <button onclick="closeAuthModal()" style="font-size: 1.4rem; color: var(--text-muted);">&times;</button>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">Select a pre-configured enterprise role with instant cryptographic JWT session:</p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="copilot-draft-btn" onclick="quickLogin('admin@querydesk.io', 'admin123')" style="padding:14px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-weight:700; color:var(--text-primary);">Alex Admin</div>
+                            <div style="font-size: 0.74rem; color: var(--text-muted);">admin@querydesk.io</div>
+                        </div>
+                        <span class="badge high">Admin</span>
+                    </div>
+                </button>
+                <button class="copilot-draft-btn" onclick="quickLogin('agent.sarah@querydesk.io', 'agent123')" style="padding:14px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-weight:700; color:var(--text-primary);">Sarah Connor</div>
+                            <div style="font-size: 0.74rem; color: var(--text-muted);">agent.sarah@querydesk.io</div>
+                        </div>
+                        <span class="badge normal">Agent</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create / Edit Article Modal -->
+    <div class="modal-overlay" id="article-modal" onclick="if(event.target===this) closeArticleModal()">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 1.25rem; font-weight: 700;" id="article-modal-title">Create Support Article</h3>
+                <button onclick="closeArticleModal()" style="font-size: 1.4rem; color: var(--text-muted);">&times;</button>
+            </div>
+            <input type="text" id="art-title-input" class="agent-text-input" placeholder="Article Title (e.g. Return Policy Guide)">
+            <input type="text" id="art-cat-input" class="agent-text-input" placeholder="Category (e.g. Shipping, Billing, Returns)">
+            <textarea id="art-content-input" class="agent-text-input" rows="6" placeholder="Markdown Article Content..."></textarea>
+            <button class="btn-primary" onclick="saveArticleFromModal()">Save & Index in Vector RAG</button>
+        </div>
+    </div>
+
+    <!-- AI Article Generator Modal -->
+    <div class="modal-overlay" id="ai-art-modal" onclick="if(event.target===this) closeAiArticleModal()">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-size: 1.25rem; font-weight: 700;">✨ AI Article Generator</h3>
+                <button onclick="closeAiArticleModal()" style="font-size: 1.4rem; color: var(--text-muted);">&times;</button>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">Enter a support topic. AI will draft a complete markdown guide and index it into the vector search engine:</p>
+            <input type="text" id="ai-topic-input" class="agent-text-input" placeholder="e.g. International Customs, Damaged Items, Warranty Claims">
+            <button class="btn-primary" id="generate-ai-btn" onclick="generateAiArticle()">Generate & Index Article</button>
+        </div>
+    </div>
+    
+    <!-- Analytics View -->
+    <main class="content-container" id="analytics-view">
+        <div class="stats-grid" id="summary-cards">
+            <div class="stat-card">
+                <div class="stat-label">Total Conversations</div>
+                <div class="stat-number" id="s-total">--</div>
+                <div class="stat-trend">▲ +12% this week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Resolution Rate</div>
+                <div class="stat-number" id="s-res">--%</div>
+                <div class="stat-trend">▲ 98.4% target</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">CSAT Satisfaction</div>
+                <div class="stat-number" id="s-csat">⭐ --</div>
+                <div class="stat-trend">Top percentile</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Escalation Rate</div>
+                <div class="stat-number" id="s-esc">--%</div>
+                <div class="stat-trend" style="color:var(--primary);">Managed by AI</div>
+            </div>
+        </div>
+        
+        <div class="charts-grid">
+            <div class="panel-card">
+                <div class="panel-title">Hourly Traffic Distribution (24h)</div>
+                <div class="chart-box"><canvas id="trafficChart"></canvas></div>
+            </div>
+            <div class="panel-card">
+                <div class="panel-title">CSAT Category Ratings Breakdown</div>
+                <div class="chart-box"><canvas id="csatChart"></canvas></div>
+            </div>
+        </div>
+
+        <div class="panel-card" style="margin-top: 24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                <div class="panel-title" style="margin-bottom:0;">⭐ Customer Voice & Real-Time CSAT Feed</div>
+                <span class="badge sla-ok" id="live-csat-badge">Verified 5-Star CSAT</span>
+            </div>
+            <div class="csat-review-feed" id="csat-reviews-list">
+                <div style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding:20px;">Loading customer feedback reviews...</div>
+            </div>
+        </div>
+
+        <div class="panel-card">
+            <div class="panel-title">🏆 Agent Performance Leaderboard</div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead><tr><th>Rank</th><th>Agent Name</th><th>Tickets Resolved</th><th>Avg First Response (FRT)</th><th>CSAT Rating</th><th>Status</th></tr></thead>
+                    <tbody id="leaderboard-table">
+                        <tr>
+                            <td>🥇 1</td>
+                            <td><b>Sarah Connor</b></td>
+                            <td>42 tickets</td>
+                            <td class="mono">38s</td>
+                            <td>⭐ 4.9 / 5.0</td>
+                            <td><span class="badge sla-ok">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>🥈 2</td>
+                            <td><b>Alex Admin</b></td>
+                            <td>28 tickets</td>
+                            <td class="mono">45s</td>
+                            <td>⭐ 4.8 / 5.0</td>
+                            <td><span class="badge sla-ok">Online</span></td>
+                        </tr>
+                        <tr>
+                            <td>🥉 3</td>
+                            <td><b>David Miller</b></td>
+                            <td>19 tickets</td>
+                            <td class="mono">62s</td>
+                            <td>⭐ 4.7 / 5.0</td>
+                            <td><span class="badge sla-warn">Away</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="panel-card">
+            <div class="panel-title">Recent Customer Conversations</div>
+            <div style="overflow-x: auto;">
+                <table id="conv-table">
+                    <thead><tr><th>Session ID</th><th>Status</th><th>Intent</th><th>Sentiment</th><th>Time</th><th>Priority</th></tr></thead>
+                    <tbody><tr><td colspan="6" style="text-align: center; color:var(--text-muted);">Loading conversations...</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Agent Live Workspace -->
+    <div class="content-container" id="agent-view">
+        <div class="agent-3col-layout">
+            <!-- Left: Ticket Queue -->
+            <aside class="ticket-list-panel">
+                <div class="ticket-list-header">
+                    <span>Live Ticket Queue</span>
+                    <span class="badge normal" id="agent-status-indicator">Connected</span>
+                </div>
+                <div class="ticket-items-container" id="ticket-items">
+                    <div style="padding: 24px; text-align: center; color: var(--text-muted);">No active tickets.</div>
+                </div>
+            </aside>
+
+            <!-- Middle: Active Chat -->
+            <section class="chat-main-pane">
+                <div class="chat-pane-header">
+                    <div>
+                        <span style="font-weight: 700; font-size:1.05rem;" id="active-ticket-id">Select a conversation</span>
+                        <span class="badge high" id="active-ticket-priority" style="display:none; margin-left: 8px;">High</span>
+                        <span class="badge sla-ok" id="active-ticket-sla" style="display:none; margin-left: 6px;">⏱️ SLA 4:32</span>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <button class="macro-pill" id="btn-export-transcript" style="display:none;" onclick="exportCurrentTranscript()">Print Transcript 📄</button>
+                        <button class="macro-pill" id="btn-sync-zendesk" style="display:none;" onclick="syncCurrentTicket('zendesk')">Sync Zendesk 🎫</button>
+                        <button class="macro-pill" id="btn-sync-jira" style="display:none;" onclick="syncCurrentTicket('jira')">Sync Jira 🔷</button>
+                        <div id="takeover-action-area"></div>
+                    </div>
+                </div>
+
+                <div class="agent-chat-stream" id="chat-stream">
+                    <div style="margin: auto; color: var(--text-muted); font-size: 0.9rem;">Select a customer ticket from the left queue to open live stream.</div>
+                </div>
+
+                <div class="canned-macros-bar" id="canned-chips" style="display:none;">
+                    <button class="macro-pill" onclick="useCanned('/order')">📦 /order</button>
+                    <button class="macro-pill" onclick="useCanned('/return')">🔄 /return</button>
+                    <button class="macro-pill" onclick="useCanned('/refund')">💳 /refund</button>
+                    <button class="macro-pill" onclick="useCanned('/apology')">🙏 /apology</button>
+                    <button class="macro-pill" onclick="useCanned('/closing')">✨ /closing</button>
+                </div>
+
+                <div class="agent-input-container" id="agent-composer" style="display:none;">
+                    <input type="text" class="agent-text-input" id="agent-msg-input" placeholder="Type reply (Use /refund, /order, /return for instant macros)...">
+                    <button class="btn-primary" id="agent-send-btn" onclick="sendAgentMessage()">Send Reply</button>
+                </div>
+            </section>
+
+            <!-- Right: AI Copilot Sidebar -->
+            <aside class="copilot-sidebar" id="copilot-panel">
+                <div class="copilot-header">
+                    <span>🤖 AI Copilot</span>
+                    <span class="badge role">Active Assist</span>
+                </div>
+                <div class="copilot-body" id="copilot-content">
+                    <div style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding:20px;">Select a conversation to generate real-time AI drafts and context insights.</div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Knowledge Base CMS View -->
+    <main class="content-container" id="kb-view">
+        <div class="panel-card" style="display:flex; justify-content:space-between; align-items:center; flex-direction:row;">
+            <div>
+                <h3 style="font-size:1.25rem; font-weight:700;">Knowledge Base Content Management</h3>
+                <p style="font-size:0.82rem; color:var(--text-secondary); margin-top:4px;">Manage support articles and dynamically update the Vector RAG Semantic Engine:</p>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-primary" style="padding:9px 16px; font-size:0.84rem;" onclick="openAiArticleModal()">✨ Generate with AI</button>
+                <button class="macro-pill" style="padding:9px 16px; font-size:0.84rem;" onclick="openArticleModal()">+ Create Article</button>
+            </div>
+        </div>
+
+        <div class="panel-card">
+            <div style="display:flex; gap:12px; margin-bottom:16px;">
+                <input type="text" id="kb-search-input" class="agent-text-input" placeholder="Filter articles by title or keyword..." oninput="filterArticles()">
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead><tr><th>Article ID</th><th>Title</th><th>Category</th><th>Tags</th><th>Actions</th></tr></thead>
+                    <tbody id="kb-table-body">
+                        <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Loading Knowledge Base articles...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- CRM & Integrations View -->
+    <main class="content-container" id="crm-view">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Zendesk Status</div>
+                <div class="stat-number" style="color:var(--primary); font-size:1.5rem;">Connected</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">REST API v2 Auto-Sync</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Jira Service Management</div>
+                <div class="stat-number" style="color:var(--primary); font-size:1.5rem;">Ready</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">Atlassian Cloud Issue Dispatch</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Freshdesk</div>
+                <div class="stat-number" style="color:var(--primary); font-size:1.5rem;">Ready</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">v2 Tickets Schema</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Signed Webhooks</div>
+                <div class="stat-number" style="color:var(--primary); font-size:1.5rem;">HMAC-SHA256</div>
+                <div style="font-size:0.75rem; color:var(--text-muted);">Active Signature Verification</div>
+            </div>
+        </div>
+
+        <div class="panel-card">
+            <div class="panel-title">Outbound Webhooks Configuration</div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead><tr><th>Webhook ID</th><th>Name</th><th>Destination URL</th><th>Subscribed Events</th><th>Status</th></tr></thead>
+                    <tbody id="webhooks-table">
+                        <tr>
+                            <td class="mono">wh-default-01</td>
+                            <td>Enterprise Helpdesk Webhook</td>
+                            <td class="mono">https://httpbin.org/post</td>
+                            <td><span class="badge normal">ticket.escalated</span> <span class="badge normal">ticket.synced</span></td>
+                            <td><span class="badge sla-ok">Active</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel-card">
+            <div class="panel-title">Ticket Schema Exporter (Preview)</div>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">Inspect formatted CRM JSON payload for the currently active ticket:</p>
+            <div style="display:flex; gap:10px; margin-bottom:12px;">
+                <button class="macro-pill" onclick="previewExport('zendesk')">Zendesk JSON</button>
+                <button class="macro-pill" onclick="previewExport('jira')">Jira JSON</button>
+                <button class="macro-pill" onclick="previewExport('freshdesk')">Freshdesk JSON</button>
+            </div>
+            <pre id="crm-json-preview" style="background:var(--bg-surface-elevated); border:1px solid var(--border-color); padding:16px; border-radius:var(--radius-md); font-family:'JetBrains Mono', monospace; font-size:0.82rem; overflow-x:auto; max-height:240px;">Select a format above to view export schema...</pre>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = (location.origin && location.origin !== 'null' && !location.origin.startsWith('file')) ? '' : 'http://127.0.0.1:5000';
+        const WS_BASE = (location.host) ? `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}` : 'ws://127.0.0.1:5000';
+        window.API_BASE = API_BASE;
+        window.WS_BASE = WS_BASE;
+
+        // Auth State
+        let jwtToken = localStorage.getItem('qd_jwt_token') || '';
+        let currentUser = JSON.parse(localStorage.getItem('qd_user') || '{"name":"Alex Admin","role":"admin","email":"admin@querydesk.io"}');
+        let articlesList = [];
+        let editingArticleId = null;
+
+        const MACROS = {
+            '/order': "I have verified your order details in our warehouse system. Your shipment is currently on schedule for delivery.",
+            '/return': "Your return request has been authorized. A prepaid shipping label (PDF) has been dispatched to your email address.",
+            '/refund': "I reviewed your transaction history and initiated a full credit adjustment to your original payment method.",
+            '/apology': "Please accept our sincere apologies for the inconvenience caused. We are committed to making this right for you.",
+            '/closing': "Is there anything else I can assist you with today? Thank you for choosing QueryDesk support!"
+        };
+
+        function updateProfileUI() {
+            document.getElementById('user-name-label').textContent = currentUser.name || 'User';
+            document.getElementById('user-role-label').textContent = currentUser.role || 'agent';
+            document.getElementById('user-avatar-initials').textContent = (currentUser.name || 'A').charAt(0);
+        }
+        updateProfileUI();
+
+        function openAuthModal() { document.getElementById('auth-modal').style.display = 'flex'; }
+        function closeAuthModal() { document.getElementById('auth-modal').style.display = 'none'; }
+        function openArticleModal() { editingArticleId = null; document.getElementById('article-modal').style.display = 'flex'; }
+        function closeArticleModal() { document.getElementById('article-modal').style.display = 'none'; }
+        function openAiArticleModal() { document.getElementById('ai-art-modal').style.display = 'flex'; }
+        function closeAiArticleModal() { document.getElementById('ai-art-modal').style.display = 'none'; }
+
+        function showToast(message, icon = '✨') {
+            const container = document.getElementById('toast-shelf');
+            const toast = document.createElement('div');
+            toast.className = 'toast-item';
+            toast.innerHTML = `<span style="font-size:1.1rem;">${icon}</span><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-10px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        async function quickLogin(email, password) {
+            try {
+                const res = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (data.access_token) {
+                    jwtToken = data.access_token;
+                    currentUser = data.user;
+                    localStorage.setItem('qd_jwt_token', jwtToken);
+                    localStorage.setItem('qd_user', JSON.stringify(currentUser));
+                    updateProfileUI();
+                    closeAuthModal();
+                    fetchAgentTickets();
+                    showToast(`Signed in as ${currentUser.name}`, '🔑');
+                }
+            } catch(e) {}
+        }
+
+        if (!jwtToken) {
+            quickLogin('admin@querydesk.io', 'admin123');
+        }
+
+        // State
+        let agentWs = null;
+        let tickets = [];
+        let activeSessionId = null;
+        let intentChart = null;
+        let sentimentChart = null;
+        let trafficChart = null;
+        let csatChart = null;
+
+        // Theme toggle
+        const themeBtn = document.getElementById('theme-btn');
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            document.body.classList.toggle('light');
+            themeBtn.textContent = document.body.classList.contains('dark') ? '☾' : '☀';
+            Chart.defaults.color = document.body.classList.contains('dark') ? '#94A3B8' : '#64748B';
+            if (intentChart) intentChart.update();
+            if (sentimentChart) sentimentChart.update();
+            if (trafficChart) trafficChart.update();
+            if (csatChart) csatChart.update();
+        });
+
+        // Tabs
+        function switchTab(tab) {
+            document.getElementById('tab-analytics').classList.toggle('active', tab === 'analytics');
+            document.getElementById('tab-agent').classList.toggle('active', tab === 'agent');
+            document.getElementById('tab-kb').classList.toggle('active', tab === 'kb');
+            document.getElementById('tab-crm').classList.toggle('active', tab === 'crm');
+            document.getElementById('analytics-view').style.display = tab === 'analytics' ? 'flex' : 'none';
+            document.getElementById('agent-view').style.display = tab === 'agent' ? 'flex' : 'none';
+            document.getElementById('kb-view').style.display = tab === 'kb' ? 'flex' : 'none';
+            document.getElementById('crm-view').style.display = tab === 'crm' ? 'flex' : 'none';
+            if (tab === 'kb') fetchArticles();
+        }
+
+        // Agent WebSocket
+        function connectAgentWs() {
+            try {
+                agentWs = new WebSocket(`${WS_BASE}/ws/admin/agent`);
+                agentWs.onopen = () => {
+                    document.getElementById('agent-status-indicator').textContent = 'Live WS';
+                };
+                agentWs.onmessage = (e) => {
+                    const data = JSON.parse(e.data);
+                    if (data.type === 'tickets_list') {
+                        tickets = data.tickets;
+                        renderTicketQueue();
+                    } else if (data.type === 'ticket_escalated') {
+                        fetchAgentTickets();
+                        updateBadgeCount();
+                        showToast(`New Escalated Ticket: ${data.session_id.substring(0,8)}`, '🚨');
+                    } else if (data.type === 'customer_message') {
+                        if (data.session_id === activeSessionId) {
+                            appendMessageToStream('user', data.message, 'Customer');
+                            loadCopilotAssist(activeSessionId);
+                        }
+                        updateTicketLastMessage(data.session_id, data.message);
+                    } else if (data.type === 'agent_message_sent') {
+                        if (data.session_id === activeSessionId) {
+                            appendMessageToStream('agent', data.text, data.agent_name);
+                        }
+                    } else if (data.type === 'ticket_taken_over') {
+                        fetchAgentTickets();
+                    }
+                };
+                agentWs.onclose = () => setTimeout(connectAgentWs, 3000);
+                agentWs.onerror = () => {
+                    document.getElementById('agent-status-indicator').textContent = 'REST Active';
+                };
+            } catch(err) {
+                document.getElementById('agent-status-indicator').textContent = 'REST Active';
+            }
+        }
+        connectAgentWs();
+
+        async function fetchAgentTickets() {
+            try {
+                const headers = jwtToken ? { 'Authorization': `Bearer ${jwtToken}` } : {};
+                const res = await fetch(`${API_BASE}/api/agent/tickets`, { headers });
+                const data = await res.json();
+                tickets = data.tickets || [];
+                renderTicketQueue();
+                updateBadgeCount();
+            } catch(e) {}
+        }
+
+        function updateBadgeCount() {
+            const esc = tickets.filter(t => t.escalated || t.priority === 'High').length;
+            const badge = document.getElementById('escalated-badge');
+            if (esc > 0) {
+                badge.style.display = 'inline-block';
+                badge.textContent = esc;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function updateTicketLastMessage(sessionId, message) {
+            const t = tickets.find(x => x.id === sessionId);
+            if (t) {
+                t.last_message = message;
+                renderTicketQueue();
+            }
+        }
+
+        function calculateSLA(ticket) {
+            const createdAt = new Date(ticket.created_at || Date.now()).getTime();
+            const now = Date.now();
+            const limitMins = ticket.priority === 'Critical' ? 3 : (ticket.priority === 'High' ? 5 : 15);
+            const deadline = createdAt + (limitMins * 60 * 1000);
+            const remainingSec = Math.floor((deadline - now) / 1000);
+
+            if (remainingSec <= 0) {
+                return { text: `⚠️ SLA Breached`, class: 'badge sla-breach' };
+            } else if (remainingSec < 120) {
+                const m = Math.floor(remainingSec / 60);
+                const s = remainingSec % 60;
+                return { text: `⏱️ ${m}:${s < 10 ? '0' : ''}${s}`, class: 'badge sla-warn' };
+            } else {
+                const m = Math.floor(remainingSec / 60);
+                const s = remainingSec % 60;
+                return { text: `⏱️ ${m}:${s < 10 ? '0' : ''}${s}`, class: 'badge sla-ok' };
+            }
+        }
+
+        function renderTicketQueue() {
+            const container = document.getElementById('ticket-items');
+            if (tickets.length === 0) {
+                container.innerHTML = `<div style="padding:24px; text-align:center; color:var(--text-muted);">No active tickets.</div>`;
+                return;
+            }
+            container.innerHTML = '';
+            tickets.forEach(t => {
+                const div = document.createElement('div');
+                div.className = `ticket-card ${t.id === activeSessionId ? 'active' : ''}`;
+                div.onclick = () => selectTicket(t.id);
+                
+                const sla = calculateSLA(t);
+                div.innerHTML = `
+                    <div class="ticket-card-top">
+                        <span class="mono" style="font-weight:600;">${t.id.substring(0, 10)}</span>
+                        <span class="${sla.class}">${sla.text}</span>
+                    </div>
+                    <div class="ticket-preview">${t.last_message || 'New conversation started'}</div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-muted); margin-top:2px;">
+                        <span>Priority: ${t.priority || 'Medium'}</span>
+                        <span>${t.taken_over_by ? 'Agent: ' + t.taken_over_by : 'AI Managed'}</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        setInterval(() => {
+            if (tickets.length > 0) renderTicketQueue();
+        }, 3000);
+
+        async function selectTicket(sessionId) {
+            activeSessionId = sessionId;
+            renderTicketQueue();
+            
+            const ticket = tickets.find(t => t.id === sessionId);
+            document.getElementById('active-ticket-id').textContent = `Ticket: ${sessionId}`;
+            const prio = document.getElementById('active-ticket-priority');
+            prio.style.display = ticket && ticket.priority === 'High' ? 'inline-block' : 'none';
+            
+            const slaPill = document.getElementById('active-ticket-sla');
+            if (ticket) {
+                const sla = calculateSLA(ticket);
+                slaPill.style.display = 'inline-block';
+                slaPill.className = sla.class;
+                slaPill.textContent = sla.text;
+            }
+
+            document.getElementById('btn-export-transcript').style.display = 'inline-block';
+            document.getElementById('btn-sync-zendesk').style.display = 'inline-block';
+            document.getElementById('btn-sync-jira').style.display = 'inline-block';
+
+            const actionArea = document.getElementById('takeover-action-area');
+            if (ticket && ticket.taken_over_by) {
+                actionArea.innerHTML = `<span class="badge normal">Managing as ${ticket.taken_over_by}</span>`;
+            } else {
+                actionArea.innerHTML = `<button class="takeover-button" onclick="takeoverTicket('${sessionId}')">⚡ Take Over Chat</button>`;
+            }
+
+            document.getElementById('canned-chips').style.display = 'flex';
+            document.getElementById('agent-composer').style.display = 'flex';
+
+            // Load history & AI Copilot assist
+            const stream = document.getElementById('chat-stream');
+            stream.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);">Loading conversation...</div>`;
+            try {
+                const res = await fetch(`${API_BASE}/api/sessions/${sessionId}/history`);
+                const data = await res.json();
+                stream.innerHTML = '';
+                (data.turns || []).forEach(turn => {
+                    appendMessageToStream(turn.role === 'human_agent' ? 'agent' : (turn.role === 'user' ? 'user' : 'bot'), turn.content, turn.role === 'user' ? 'Customer' : (turn.role === 'human_agent' ? 'Support Agent' : 'AI Assistant'));
+                });
+            } catch(e) {
+                stream.innerHTML = `<div style="color:var(--danger);">Error loading history.</div>`;
+            }
+
+            loadCopilotAssist(sessionId);
+        }
+
+        function exportCurrentTranscript() {
+            if (!activeSessionId) return;
+            window.open(`${API_BASE}/api/sessions/${activeSessionId}/transcript-export`, '_blank');
+        }
+
+        async function loadCopilotAssist(sessionId) {
+            const copilotBox = document.getElementById('copilot-content');
+            try {
+                const res = await fetch(`${API_BASE}/api/agent/copilot/${sessionId}`);
+                const data = await res.json();
+                
+                let draftsHtml = (data.suggested_drafts || []).map(d => `
+                    <button class="copilot-draft-btn" onclick="useCanned(this.getAttribute('data-text'))" data-text="${d.replace(/"/g, '&quot;')}">
+                        💡 ${d}
+                    </button>
+                `).join('');
+
+                let articlesHtml = (data.recommended_articles || []).map(a => `
+                    <div style="margin-top:8px; background:var(--bg-surface); padding:10px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                        <div style="font-weight:600; color:var(--text-primary); font-size:0.85rem;">${a.title}</div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin:4px 0;">${a.excerpt}</div>
+                        <button class="macro-pill" style="font-size:0.72rem; padding:4px 10px;" onclick="useCanned(this.getAttribute('data-full'))" data-full="${a.full_content.replace(/"/g, '&quot;')}">Insert Article</button>
+                    </div>
+                `).join('');
+
+                copilotBox.innerHTML = `
+                    <div class="copilot-card">
+                        <div class="copilot-card-title"><span>Insight Summary</span> <span>🎯</span></div>
+                        <div>${data.summary || 'Customer inquiry in progress.'}</div>
+                    </div>
+                    <div class="copilot-card">
+                        <div class="copilot-card-title"><span>AI Suggested Drafts</span> <span>✨</span></div>
+                        ${draftsHtml}
+                    </div>
+                    ${articlesHtml ? `
+                    <div class="copilot-card">
+                        <div class="copilot-card-title"><span>Matching Knowledge</span> <span>📚</span></div>
+                        ${articlesHtml}
+                    </div>` : ''}
+                `;
+            } catch(e) {
+                copilotBox.innerHTML = `<div style="color:var(--text-muted); font-size:0.8rem; padding:10px;">Copilot analyzing session...</div>`;
+            }
+        }
+
+        function appendMessageToStream(role, text, senderLabel) {
+            const stream = document.getElementById('chat-stream');
+            const div = document.createElement('div');
+            div.className = `c-bubble-row ${role}`;
+            div.innerHTML = `
+                <div class="c-bubble">${text.replace(/\n/g, '<br>')}</div>
+                <div class="c-meta">${senderLabel} · ${new Date().toLocaleTimeString()}</div>
+            `;
+            stream.appendChild(div);
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function takeoverTicket(sessionId) {
+            if (agentWs && agentWs.readyState === WebSocket.OPEN) {
+                agentWs.send(JSON.stringify({
+                    type: 'takeover',
+                    session_id: sessionId,
+                    agent_name: currentUser.name || 'Support Agent'
+                }));
+            }
+            selectTicket(sessionId);
+            showToast(`Assigned ${sessionId} to you`, '⚡');
+        }
+
+        async function syncCurrentTicket(provider) {
+            if (!activeSessionId) return;
+            try {
+                const res = await fetch(`${API_BASE}/api/crm/sync-ticket`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: activeSessionId, provider })
+                });
+                const data = await res.json();
+                showToast(`Synced to ${provider.toUpperCase()} (${data.external_ticket_id})`, '🎫');
+            } catch(e) {
+                showToast(`Sync failed: ${e.message}`, '❌');
+            }
+        }
+
+        async function previewExport(format) {
+            const sid = activeSessionId || (tickets[0] ? tickets[0].id : 'test-session');
+            try {
+                const res = await fetch(`${API_BASE}/api/crm/export/${sid}?format=${format}`);
+                const data = await res.json();
+                document.getElementById('crm-json-preview').textContent = JSON.stringify(data, null, 2);
+                showToast(`Loaded ${format.toUpperCase()} export schema`, '📋');
+            } catch(e) {
+                document.getElementById('crm-json-preview').textContent = `// Please select an active ticket from the Live Agent tab first.`;
+            }
+        }
+
+        function useCanned(text) {
+            const resolved = MACROS[text] || text;
+            document.getElementById('agent-msg-input').value = resolved;
+            showToast(`Inserted draft macro`, '✨');
+            document.getElementById('agent-msg-input').focus();
+        }
+
+        // Macro listener
+        const agentInputEl = document.getElementById('agent-msg-input');
+        agentInputEl?.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            if (MACROS[val]) {
+                e.target.value = MACROS[val];
+                showToast(`Expanded shortcut ${val}`, '⚡');
+            }
+        });
+
+        function sendAgentMessage() {
+            const input = document.getElementById('agent-msg-input');
+            const text = input.value.trim();
+            if (!text || !activeSessionId) return;
+
+            if (agentWs && agentWs.readyState === WebSocket.OPEN) {
+                agentWs.send(JSON.stringify({
+                    type: 'agent_message',
+                    session_id: activeSessionId,
+                    text: text,
+                    agent_name: currentUser.name || 'Support Agent'
+                }));
+            }
+            input.value = '';
+        }
+
+        agentInputEl?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') sendAgentMessage();
+        });
+
+        // Knowledge Base CMS Handlers
+        async function fetchArticles() {
+            try {
+                const res = await fetch(`${API_BASE}/api/kb/articles`);
+                const data = await res.json();
+                articlesList = data.articles || [];
+                renderArticlesTable(articlesList);
+            } catch(e) {}
+        }
+
+        function renderArticlesTable(list) {
+            const tbody = document.getElementById('kb-table-body');
+            if (!list || list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No articles found.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = list.map(a => `
+                <tr>
+                    <td class="mono">${a.id}</td>
+                    <td><b>${a.title}</b></td>
+                    <td><span class="badge normal">${a.category || 'General'}</span></td>
+                    <td>${(a.tags || []).map(t => `<span class="badge role">${t}</span>`).join(' ')}</td>
+                    <td>
+                        <button class="macro-pill" style="font-size:0.75rem; padding:4px 8px; color:var(--danger);" onclick="deleteArticle('${a.id}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterArticles() {
+            const q = document.getElementById('kb-search-input').value.toLowerCase();
+            const filtered = articlesList.filter(a => a.title.toLowerCase().includes(q) || a.content.toLowerCase().includes(q));
+            renderArticlesTable(filtered);
+        }
+
+        async function saveArticleFromModal() {
+            const title = document.getElementById('art-title-input').value.trim();
+            const category = document.getElementById('art-cat-input').value.trim() || 'General';
+            const content = document.getElementById('art-content-input').value.trim();
+            if (!title || !content) {
+                alert("Please fill in Title and Content");
+                return;
+            }
+
+            try {
+                await fetch(`${API_BASE}/api/kb/articles`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, category, content, tags: [category.toLowerCase()] })
+                });
+                closeArticleModal();
+                fetchArticles();
+                showToast(`Article saved and indexed!`, '📚');
+            } catch(e) {
+                alert(`Error saving article: ${e}`);
+            }
+        }
+
+        async function generateAiArticle() {
+            const topic = document.getElementById('ai-topic-input').value.trim();
+            if (!topic) return;
+
+            const btn = document.getElementById('generate-ai-btn');
+            btn.textContent = 'Generating Article...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/kb/generate-ai`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ topic, category: 'AI Generated' })
+                });
+                const data = await res.json();
+                closeAiArticleModal();
+                fetchArticles();
+                showToast(`Generated: ${data.article.title}`, '✨');
+            } catch(e) {
+                alert(`Generation failed: ${e}`);
+            } finally {
+                btn.textContent = 'Generate & Index Article';
+                btn.disabled = false;
+            }
+        }
+
+        async function deleteArticle(id) {
+            if (!confirm("Are you sure you want to delete this article?")) return;
+            try {
+                await fetch(`${API_BASE}/api/kb/articles/${id}`, { method: 'DELETE' });
+                fetchArticles();
+                showToast(`Deleted article ${id}`, '🗑️');
+            } catch(e) {}
+        }
+
+        // Analytics Dashboard
+        async function updateDashboard() {
+            try {
+                const summary = await (await fetch(`${API_BASE}/api/analytics/summary`)).json();
+                if (summary) {
+                    document.getElementById('s-total').textContent = summary.total_conversations || 0;
+                    document.getElementById('s-res').textContent = `${Math.round((summary.resolution_rate || 0) * 100)}%`;
+                    document.getElementById('s-esc').textContent = `${Math.round((summary.escalation_rate || 0) * 100)}%`;
+                }
+
+                // CSAT Breakdown
+                const csatData = await (await fetch(`${API_BASE}/api/analytics/csat-breakdown`)).json();
+                if (csatData) {
+                    document.getElementById('s-csat').textContent = `⭐ ${csatData.average_stars || '5.0'}`;
+                    const labels = Object.keys(csatData.categories || { 'Speed': 12, 'Accuracy': 18, 'Politeness': 15 });
+                    const counts = Object.values(csatData.categories || { 'Speed': 12, 'Accuracy': 18, 'Politeness': 15 });
+                    if (!csatChart) {
+                        const ctx = document.getElementById('csatChart').getContext('2d');
+                        csatChart = new Chart(ctx, {
+                            type: 'doughnut',
+                            data: { labels: labels.length ? labels : ['Speed', 'Accuracy', 'Helpfulness'], datasets: [{ data: counts.length ? counts : [10, 15, 8], backgroundColor: ['#3b82f6', '#06b6d4', '#f59e0b', '#10b981', '#ef4444'] }] },
+                            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+                        });
+                    } else {
+                        csatChart.data.labels = labels;
+                        csatChart.data.datasets[0].data = counts;
+                        csatChart.update();
+                    }
+                }
+
+                // Hourly Traffic
+                const trafficData = await (await fetch(`${API_BASE}/api/analytics/hourly-traffic`)).json();
+                if (trafficData) {
+                    const hours = Array.from({length: 24}, (_, i) => `${i}:00`);
+                    const counts = Array(24).fill(0);
+                    (trafficData.traffic || []).forEach(t => {
+                        if (t.hour >= 0 && t.hour < 24) counts[t.hour] = t.count;
+                    });
+                    if (!trafficChart) {
+                        const ctx = document.getElementById('trafficChart').getContext('2d');
+                        trafficChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: { labels: hours, datasets: [{ label: 'Messages', data: counts, backgroundColor: '#3b82f6', borderRadius: 6 }] },
+                            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+                        });
+                    } else {
+                        trafficChart.data.datasets[0].data = counts;
+                        trafficChart.update();
+                    }
+                }
+
+                // Recent CSAT Reviews Feed
+                try {
+                    const recentSurveysRes = await fetch(`${API_BASE}/api/analytics/csat-recent?limit=6`);
+                    const recentSurveysData = await recentSurveysRes.json();
+                    const surveysContainer = document.getElementById('csat-reviews-list');
+                    if (surveysContainer && recentSurveysData.surveys && recentSurveysData.surveys.length > 0) {
+                        surveysContainer.innerHTML = recentSurveysData.surveys.map(s => {
+                            const starStr = '⭐'.repeat(s.rating || 5);
+                            const catsHtml = (s.categories || []).map(c => `<span class="csat-tag-pill">${c}</span>`).join('');
+                            const feedbackText = s.feedback_text ? `"${s.feedback_text}"` : 'Customer resolved inquiry with QueryDesk AI Assistant';
+                            const dateStr = s.timestamp ? new Date(s.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : 'Recent';
+                            return `
+                                <div class="csat-review-item">
+                                    <div class="csat-review-header">
+                                        <span class="csat-star-badge">${starStr} (${s.rating}/5)</span>
+                                        <span class="mono" style="color:var(--text-muted); font-size:0.75rem;">${dateStr}</span>
+                                    </div>
+                                    <div class="csat-review-text">${feedbackText}</div>
+                                    ${catsHtml ? `<div class="csat-review-tags">${catsHtml}</div>` : ''}
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                } catch(e) {}
+
+                const convs = await (await fetch(`${API_BASE}/api/analytics/conversations`)).json();
+                if (convs && convs.conversations) {
+                    const tbody = document.querySelector('#conv-table tbody');
+                    tbody.innerHTML = convs.conversations.map(c => `
+                        <tr>
+                            <td class="mono">${c.id.substring(0, 10)}...</td>
+                            <td><span class="badge ${c.status === 'Resolved' ? 'sla-ok' : (c.escalated ? 'high' : 'normal')}">${c.status}</span></td>
+                            <td>${c.intent || 'general'}</td>
+                            <td>${c.sentiment ? c.sentiment.toFixed(2) : '0.00'}</td>
+                            <td>${new Date(c.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</td>
+                            <td><span class="badge ${c.priority === 'High' ? 'high' : 'normal'}">${c.priority}</span></td>
+                        </tr>
+                    `).join('');
+                }
+            } catch(e) {}
+        }
+
+        setInterval(updateDashboard, 15000);
+        updateDashboard();
+        fetchAgentTickets();
+    </script>
+</body>
+</html>

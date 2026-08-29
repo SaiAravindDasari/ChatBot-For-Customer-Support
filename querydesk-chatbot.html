@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>QueryDesk — AI Support Console</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F5F6F8;
+    --panel: #FFFFFF;
+    --panel-2: #FAFBFC;
+    --panel-3: #F1F3F6;
+    --border: #E3E6EB;
+    --border-soft: #EAECF0;
+    --teal: #2F6FE0;
+    --teal-dim: #B7CCF4;
+    --teal-text: #2554B0;
+    --amber: #B5720B;
+    --text: #16181D;
+    --text-muted: #6B7180;
+    --text-dim: #9BA0AC;
+    --danger: #C0344A;
+    --radius: 10px;
+
+    --chip-bg: #FFFFFF;
+    --hover-bg: #EEF3FC;
+    --hover-border: #D6E4FA;
+    --avatar-bot-bg: #EAF1FD;
+    --avatar-bot-border: #D6E4FA;
+    --pill-online-bg: #EAF7EF;
+    --pill-online-border: #CFEBDB;
+    --pill-online-text: #1B7A4D;
+    --pill-online-dot: #1B9E5B;
+    --resolve-done-bg: #EAF7EF;
+    --resolve-done-border: #9FCBB2;
+    --resolve-done-text: #1B7A4D;
+    --attach-chip-bg: #F1F3F6;
+    --shadow-app: 0 1px 2px rgba(16,24,40,0.04), 0 12px 32px -16px rgba(16,24,40,0.10);
+  }
+  body.dark{
+    --bg: #0B1220;
+    --panel: #111A2E;
+    --panel-2: #17223B;
+    --panel-3: #1C2946;
+    --border: #263452;
+    --border-soft: #1E2A46;
+    --teal: #2DD9C4;
+    --teal-dim: #1B8B7C;
+    --teal-text: #2DD9C4;
+    --amber: #F0A868;
+    --text: #EAEEF7;
+    --text-muted: #8C97B3;
+    --text-dim: #5A6485;
+    --danger: #E8748A;
+
+    --chip-bg: #17223B;
+    --hover-bg: #1C2946;
+    --hover-border: #29406B;
+    --avatar-bot-bg: rgba(45,217,196,0.12);
+    --avatar-bot-border: rgba(45,217,196,0.25);
+    --pill-online-bg: rgba(45,217,196,0.08);
+    --pill-online-border: rgba(45,217,196,0.25);
+    --pill-online-text: #2DD9C4;
+    --pill-online-dot: #2DD9C4;
+    --resolve-done-bg: rgba(45,217,196,0.08);
+    --resolve-done-border: #1B8B7C;
+    --resolve-done-text: #2DD9C4;
+    --attach-chip-bg: #1C2946;
+    --shadow-app: 0 30px 80px -30px rgba(0,0,0,0.7);
+  }
+  body{ transition:background 0.2s ease; }
+  .app{ transition:background 0.2s ease, box-shadow 0.2s ease; }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px 16px;
+  }
+  .app{
+    width:100%;
+    max-width:1180px;
+    height:min(760px, 92vh);
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    box-shadow: var(--shadow-app);
+    position:relative;
+  }
+
+  /* ---------- Ticket header (signature element) ---------- */
+  .ticket-bar{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:14px 20px;
+    border-bottom:1px solid var(--border);
+    background:var(--panel-2);
+    flex-wrap:wrap;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-right:auto;
+  }
+  .brand svg{ width:26px; height:26px; flex-shrink:0; }
+  .brand-name{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:17px;
+    letter-spacing:0.2px;
+  }
+  .brand-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    color:var(--text-dim);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-top:1px;
+    display:block;
+  }
+  .ticket-chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--text-muted);
+    background:var(--chip-bg);
+    border:1px solid var(--border-soft);
+    padding:6px 10px;
+    border-radius:7px;
+    letter-spacing:0.03em;
+    white-space:nowrap;
+  }
+  .ticket-chip b{ color:var(--text); font-weight:600; }
+  .status-pill{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--pill-online-text);
+    background:var(--pill-online-bg);
+    border:1px solid var(--pill-online-border);
+    padding:6px 11px;
+    border-radius:7px;
+    white-space:nowrap;
+    transition:color 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+  }
+  .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--pill-online-dot);
+    box-shadow:0 0 0 0 rgba(27,158,91,0.5);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(27,158,91,0.45); }
+    70%{ box-shadow:0 0 0 7px rgba(27,158,91,0); }
+    100%{ box-shadow:0 0 0 0 rgba(27,158,91,0); }
+  }
+  .icon-btn{
+    width:32px; height:32px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--chip-bg);
+    border:1px solid var(--border-soft);
+    border-radius:7px;
+    color:var(--text-muted);
+    cursor:pointer;
+    flex-shrink:0;
+    transition:background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
+  }
+  .icon-btn:hover{ background:var(--hover-bg); color:var(--teal-text); border-color:var(--hover-border); transform:translateY(-1px); }
+  .icon-btn:active{ transform:translateY(0); }
+  .icon-btn svg{ width:15px; height:15px; }
+
+  .lang-select{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--text-muted);
+    background:var(--chip-bg);
+    border:1px solid var(--border-soft);
+    padding:6px 8px;
+    border-radius:7px;
+    cursor:pointer;
+    outline:none;
+  }
+  .lang-select:hover{ border-color:var(--hover-border); color:var(--teal-text); }
+
+  /* ---------- FAQ modal ---------- */
+  .faq-overlay{
+    display:none;
+    position:absolute;
+    inset:0;
+    background:rgba(10,14,24,0.45);
+    z-index:20;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    backdrop-filter:blur(2px);
+  }
+  .faq-overlay.show{ display:flex; animation:overlay-in 0.18s ease; }
+  @keyframes overlay-in{ from{ opacity:0; } to{ opacity:1; } }
+  .faq-modal{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:12px;
+    width:100%;
+    max-width:440px;
+    max-height:80%;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    box-shadow:0 24px 60px -20px rgba(0,0,0,0.35);
+    animation:modal-in 0.22s cubic-bezier(.2,.9,.3,1.2);
+  }
+  @keyframes modal-in{
+    from{ opacity:0; transform:translateY(8px) scale(0.98); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  .faq-modal-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 16px;
+    border-bottom:1px solid var(--border);
+  }
+  .faq-modal-head b{ font-family:'Space Grotesk', sans-serif; font-size:15px; }
+  .faq-close{
+    margin-left:auto;
+    cursor:pointer;
+    color:var(--text-dim);
+    font-size:16px;
+    line-height:1;
+  }
+  .faq-close:hover{ color:var(--danger); }
+  .faq-search{
+    margin:12px 16px 8px;
+    background:var(--panel-2);
+    border:1px solid var(--border-soft);
+    border-radius:8px;
+    padding:9px 11px;
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    color:var(--text);
+    outline:none;
+  }
+  .faq-search:focus{ border-color:#2F6FE0; }
+  .faq-list{
+    overflow-y:auto;
+    padding:4px 16px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .faq-item{
+    background:var(--panel-2);
+    border:1px solid var(--border-soft);
+    border-radius:9px;
+    padding:10px 12px;
+    cursor:pointer;
+    transition:border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+  }
+  .faq-item:hover{ border-color:var(--hover-border); background:var(--hover-bg); transform:translateX(2px); }
+  .faq-q{ font-size:13px; font-weight:600; color:var(--text); }
+  .faq-a{ font-size:12px; color:var(--text-muted); margin-top:3px; line-height:1.4; }
+  .faq-empty{ font-size:12.5px; color:var(--text-dim); text-align:center; padding:20px 0; }
+
+  /* ---------- Feedback ---------- */
+  .feedback-row{
+    display:flex;
+    gap:6px;
+    margin-top:6px;
+    padding:0 2px;
+  }
+  .fb-btn{
+    width:22px; height:22px;
+    display:flex; align-items:center; justify-content:center;
+    background:transparent;
+    border:1px solid var(--border-soft);
+    border-radius:6px;
+    color:var(--text-dim);
+    cursor:pointer;
+    transition:background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .fb-btn svg{ width:11px; height:11px; }
+  .fb-btn:hover{ border-color:var(--hover-border); color:var(--teal-text); }
+  .fb-btn.up.selected{ background:var(--pill-online-bg); border-color:var(--pill-online-border); color:var(--pill-online-text); }
+  .fb-btn.down.selected{ background:rgba(192,52,74,0.1); border-color:rgba(192,52,74,0.35); color:var(--danger); }
+  .fb-btn:disabled{ cursor:default; }
+
+  /* ---------- Priority / escalate ---------- */
+  .priority-select{
+    width:100%;
+    font-family:'Inter', sans-serif;
+    font-size:12.5px;
+    color:var(--text);
+    background:var(--panel-2);
+    border:1px solid var(--border-soft);
+    border-radius:7px;
+    padding:7px 8px;
+    outline:none;
+    cursor:pointer;
+  }
+  .escalate-btn{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--amber);
+    background:transparent;
+    border:1px dashed rgba(181,114,11,0.4);
+    border-radius:8px;
+    padding:9px;
+    text-align:center;
+    cursor:pointer;
+    transition:background 0.18s ease, border-color 0.18s ease, transform 0.1s ease;
+  }
+  .escalate-btn:hover{ background:rgba(181,114,11,0.08); border-color:rgba(181,114,11,0.6); }
+  .escalate-btn:active{ transform:scale(0.98); }
+  .escalate-btn:disabled{ opacity:0.5; cursor:not-allowed; transform:none; }
+
+  .avatar.agent{ background:rgba(181,114,11,0.12); color:var(--amber); border:1px solid rgba(181,114,11,0.3); }
+  .row.agent .bubble{
+    background:rgba(181,114,11,0.06);
+    border:1px solid rgba(181,114,11,0.25);
+    border-top-left-radius:4px;
+    color:var(--text);
+  }
+  .system-note{
+    align-self:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--text-dim);
+    background:var(--panel-3);
+    border:1px solid var(--border-soft);
+    padding:5px 10px;
+    border-radius:20px;
+    margin:2px 0;
+  }
+  .status-pill.escalated{
+    color:var(--amber);
+    background:rgba(181,114,11,0.08);
+    border-color:rgba(181,114,11,0.3);
+  }
+  .status-pill.escalated .dot{ background:var(--amber); animation:none; }
+
+  /* ---------- Body layout ---------- */
+  .body{
+    flex:1;
+    display:grid;
+    grid-template-columns:190px 1fr 190px;
+    min-height:0;
+  }
+  @media (max-width:820px){
+    .body{ grid-template-columns:1fr; }
+    .side-left{ order:1; display:flex; }
+    .chat-col{ order:2; }
+    .side-right{ display:none; }
+  }
+
+  /* ---------- Left: queue / categories ---------- */
+  .side-left{
+    border-right:1px solid var(--border);
+    padding:16px 14px;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    overflow-y:auto;
+  }
+  .side-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--text-dim);
+    margin:2px 0 8px 4px;
+  }
+  .cat-btn{
+    text-align:left;
+    background:transparent;
+    border:1px solid transparent;
+    color:var(--text-muted);
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    padding:9px 10px;
+    border-radius:8px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    transition:background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
+  }
+  .cat-btn:hover{
+    background:var(--hover-bg);
+    color:var(--teal-text);
+    border-color:var(--hover-border);
+    transform:translateX(2px);
+  }
+  .cat-btn .ico{ width:15px; text-align:center; opacity:0.75; font-size:13px; }
+  @media (max-width:820px){
+    .side-left{
+      flex-direction:row;
+      overflow-x:auto;
+      overflow-y:hidden;
+      border-right:none;
+      border-bottom:1px solid var(--border);
+      padding:12px 14px;
+      gap:8px;
+    }
+    .side-label{ display:none; }
+    .cat-btn{ white-space:nowrap; flex-shrink:0; }
+  }
+
+  /* ---------- Chat column ---------- */
+  .chat-col{
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+  .log{
+    flex:1;
+    overflow-y:auto;
+    padding:20px 22px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .row{ display:flex; gap:10px; max-width:82%; animation:msg-in 0.28s ease both; }
+  @keyframes msg-in{
+    from{ opacity:0; transform:translateY(6px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .row.user{ align-self:flex-end; flex-direction:row-reverse; max-width:78%; }
+  .avatar{
+    width:26px; height:26px; border-radius:7px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; flex-shrink:0; margin-top:2px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .avatar.bot{ background:var(--avatar-bot-bg); color:var(--teal-text); border:1px solid var(--avatar-bot-border); }
+  .avatar.user{ background:var(--panel-3); color:var(--text-muted); border:1px solid var(--border-soft); }
+  .bubble{
+    padding:10px 13px;
+    border-radius:12px;
+    font-size:13.5px;
+    line-height:1.58;
+    letter-spacing:0.005em;
+  }
+  .row.bot .bubble{
+    background:var(--panel-2);
+    border:1px solid var(--border-soft);
+    border-top-left-radius:4px;
+    color:var(--text);
+    box-shadow:0 1px 2px rgba(16,24,40,0.03);
+  }
+  .row.user .bubble{
+    background:#2F6FE0;
+    border:1px solid #2F6FE0;
+    border-top-right-radius:4px;
+    color:#FFFFFF;
+    box-shadow:0 2px 6px -2px rgba(47,111,224,0.35);
+  }
+  .bubble img.attach-thumb{
+    max-width:220px;
+    max-height:160px;
+    border-radius:8px;
+    display:block;
+    margin-top:6px;
+  }
+  .attach-file-chip{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.25);
+    padding:5px 8px;
+    border-radius:6px;
+    margin-top:6px;
+  }
+  .row.bot .attach-file-chip{
+    background:var(--attach-chip-bg);
+    border:1px solid var(--border-soft);
+    color:var(--text-muted);
+  }
+  .meta-line{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    color:var(--text-dim);
+    margin-top:4px;
+    padding:0 2px;
+  }
+  .row.user .meta-line{ text-align:right; }
+
+  .typing .bubble{ display:flex; align-items:center; gap:4px; padding:12px 14px; }
+  .typing .tdot{
+    width:5px;height:5px;border-radius:50%;
+    background:var(--text-dim);
+    animation:tbounce 1.1s infinite;
+  }
+  .typing .tdot:nth-child(2){ animation-delay:0.15s; }
+  .typing .tdot:nth-child(3){ animation-delay:0.3s; }
+  @keyframes tbounce{
+    0%, 60%, 100%{ transform:translateY(0); opacity:0.4; }
+    30%{ transform:translateY(-3px); opacity:1; }
+  }
+
+  /* ---------- Composer ---------- */
+  .composer{
+    border-top:1px solid var(--border);
+    padding:12px 16px 14px;
+    background:var(--panel);
+  }
+  .suggest-row{
+    display:flex;
+    gap:6px;
+    overflow-x:auto;
+    margin-bottom:9px;
+    padding-bottom:1px;
+  }
+  .suggest-chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--text-muted);
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--border-soft);
+    padding:5px 9px;
+    border-radius:6px;
+    white-space:nowrap;
+    cursor:pointer;
+    flex-shrink:0;
+    transition:border-color 0.15s, color 0.15s;
+  }
+  .suggest-chip:hover{ border-color:var(--hover-border); color:var(--teal-text); background:var(--hover-bg); }
+  .input-row{
+    display:flex;
+    gap:9px;
+    align-items:flex-end;
+  }
+  .input-row textarea{
+    flex:1;
+    resize:none;
+    background:var(--panel);
+    border:1px solid var(--border-soft);
+    border-radius:10px;
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    font-size:13.5px;
+    padding:11px 13px;
+    line-height:1.4;
+    max-height:100px;
+    outline:none;
+    transition:border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .input-row textarea:focus{ border-color:#2F6FE0; box-shadow:0 0 0 3px rgba(47,111,224,0.10); }
+  .input-row textarea::placeholder{ color:var(--text-dim); }
+  .send-btn{
+    background:#2F6FE0;
+    color:#FFFFFF;
+    border:none;
+    border-radius:10px;
+    width:42px; height:42px;
+    flex-shrink:0;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform 0.15s cubic-bezier(.34,1.56,.64,1), background 0.15s, box-shadow 0.15s;
+    box-shadow:0 2px 6px -2px rgba(47,111,224,0.4);
+  }
+  .send-btn:hover{ background:#265BBD; transform:translateY(-1px); box-shadow:0 4px 10px -2px rgba(47,111,224,0.45); }
+  .send-btn:active{ transform:scale(0.94) translateY(0); }
+  .send-btn:disabled{ background:var(--panel-3); color:var(--text-dim); cursor:not-allowed; box-shadow:none; transform:none; }
+
+  .composer-icon-btn{
+    background:var(--panel);
+    border:1px solid var(--border-soft);
+    border-radius:10px;
+    width:42px; height:42px;
+    flex-shrink:0;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text-muted);
+    transition:background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .composer-icon-btn:hover{ background:var(--hover-bg); color:var(--teal-text); border-color:var(--hover-border); }
+  .composer-icon-btn svg{ width:18px; height:18px; }
+  .composer-icon-btn.recording{
+    background:rgba(192,52,74,0.1);
+    border-color:rgba(192,52,74,0.35);
+    color:var(--danger);
+    animation:mic-pulse 1.4s infinite;
+  }
+  @keyframes mic-pulse{
+    0%{ box-shadow:0 0 0 0 rgba(192,52,74,0.35); }
+    70%{ box-shadow:0 0 0 6px rgba(192,52,74,0); }
+    100%{ box-shadow:0 0 0 0 rgba(192,52,74,0); }
+  }
+  .attach-preview{
+    display:none;
+    align-items:center;
+    gap:8px;
+    background:var(--panel-3);
+    border:1px solid var(--border-soft);
+    border-radius:8px;
+    padding:6px 9px;
+    margin-bottom:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--text-muted);
+  }
+  .attach-preview.show{ display:flex; animation:msg-in 0.2s ease; }
+  .attach-preview img{ width:28px; height:28px; border-radius:5px; object-fit:cover; }
+  .attach-preview .remove-attach{
+    margin-left:auto;
+    cursor:pointer;
+    color:var(--text-dim);
+    font-size:14px;
+    line-height:1;
+  }
+  .attach-preview .remove-attach:hover{ color:var(--danger); }
+
+  /* ---------- Right: session panel ---------- */
+  .side-right{
+    border-left:1px solid var(--border);
+    padding:18px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  .stat-block .side-label{ margin-bottom:6px; }
+  .stat-value{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:19px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    transition:color 0.2s ease;
+  }
+  .stat-sub{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color:var(--text-dim);
+    margin-top:2px;
+  }
+  .resolve-toggle{
+    margin-top:auto;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--text-muted);
+    border:1px dashed var(--border-soft);
+    border-radius:8px;
+    padding:10px;
+    text-align:center;
+    cursor:pointer;
+    transition:border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+  }
+  .resolve-toggle:hover{ border-color:var(--hover-border); color:var(--teal-text); }
+  .resolve-toggle:active{ transform:scale(0.98); }
+  .resolve-toggle.done{
+    border-color:var(--resolve-done-border);
+    color:var(--resolve-done-text);
+    background:var(--resolve-done-bg);
+    border-style:solid;
+  }
+
+  /* scrollbars */
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-thumb{ background:var(--border-soft); border-radius:8px; transition:background 0.2s ease; }
+  ::-webkit-scrollbar-thumb:hover{ background:var(--hover-border); }
+  ::-webkit-scrollbar-track{ background:transparent; }
+
+  @keyframes app-in{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .app{ animation:app-in 0.35s ease; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="ticket-bar">
+    <div class="brand">
+      <svg viewBox="0 0 26 26" fill="none">
+        <rect x="1" y="1" width="24" height="24" rx="6" stroke="#2F6FE0" stroke-width="1.4"/>
+        <path d="M7 10.5C7 8.29 8.79 6.5 11 6.5H15C17.21 6.5 19 8.29 19 10.5V13.5C19 15.71 17.21 17.5 15 17.5H12.5L9.5 20V17.3C7.98 16.86 7 15.45 7 13.7V10.5Z" fill="#2F6FE0" fill-opacity="0.92"/>
+        <circle cx="10.8" cy="12" r="0.9" fill="#FFFFFF"/>
+        <circle cx="13" cy="12" r="0.9" fill="#FFFFFF"/>
+        <circle cx="15.2" cy="12" r="0.9" fill="#FFFFFF"/>
+      </svg>
+      <div>
+        <div class="brand-name">QueryDesk</div>
+        <span class="brand-tag">AI Support Console</span>
+      </div>
+    </div>
+    <div class="ticket-chip">TICKET <b id="ticketId">#QD-0000</b></div>
+    <div class="ticket-chip">SESSION <b id="sessionTime">00:00</b></div>
+    <div class="status-pill" id="statusPill"><span class="dot"></span><span id="statusText">Agent online</span></div>
+    <select class="lang-select" id="langSelect" title="Response language">
+      <option value="English">EN — English</option>
+      <option value="Hindi">HI — हिंदी</option>
+      <option value="Telugu">TE — తెలుగు</option>
+      <option value="Spanish">ES — Español</option>
+      <option value="French">FR — Français</option>
+      <option value="German">DE — Deutsch</option>
+    </select>
+    <button class="icon-btn" id="faqBtn" title="Search FAQ / knowledge base">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6.2"/><path d="M14 14l4 4"/></svg>
+    </button>
+    <button class="icon-btn" id="exportBtn" title="Export transcript">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v10m0 0l-3.5-3.5M10 13l3.5-3.5"/><path d="M3.5 14.5V16a1 1 0 001 1h11a1 1 0 001-1v-1.5"/></svg>
+    </button>
+    <button class="icon-btn" id="themeToggle" title="Toggle theme">
+      <svg id="themeIcon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5v2M10 15.5v2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M2.5 10h2M15.5 10h2M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/><circle cx="10" cy="10" r="3.4"/></svg>
+    </button>
+  </div>
+
+  <div class="faq-overlay" id="faqOverlay">
+    <div class="faq-modal">
+      <div class="faq-modal-head">
+        <b>Knowledge base</b>
+        <span class="faq-close" id="faqClose" title="Close">✕</span>
+      </div>
+      <input class="faq-search" id="faqSearch" type="text" placeholder="Search help articles...">
+      <div class="faq-list" id="faqList"></div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <div class="side-left">
+      <div class="side-label">Categories</div>
+      <button class="cat-btn" data-msg="Hi, I'd like to check the status of my order.">
+        <span class="ico">◧</span>Order status
+      </button>
+      <button class="cat-btn" data-msg="I want to return an item and get a refund.">
+        <span class="ico">↺</span>Returns &amp; refunds
+      </button>
+      <button class="cat-btn" data-msg="I have a question about a charge on my bill.">
+        <span class="ico">▤</span>Billing
+      </button>
+      <button class="cat-btn" data-msg="I'm running into a technical problem with the product.">
+        <span class="ico">⚙</span>Technical issue
+      </button>
+      <button class="cat-btn" data-msg="I need help with my account settings.">
+        <span class="ico">◐</span>Account help
+      </button>
+      <button class="cat-btn" data-msg="I'd like to speak with a human agent.">
+        <span class="ico">→</span>Talk to a human
+      </button>
+    </div>
+
+    <div class="chat-col">
+      <div class="log" id="log"></div>
+
+      <div class="composer">
+        <div class="suggest-row">
+          <div class="suggest-chip" data-msg="Where is my package?">Where is my package?</div>
+          <div class="suggest-chip" data-msg="How long do refunds take?">Refund timeline</div>
+          <div class="suggest-chip" data-msg="Can I change my delivery address?">Change address</div>
+          <div class="suggest-chip" data-msg="What's your return policy?">Return policy</div>
+        </div>
+        <div class="attach-preview" id="attachPreview">
+          <span id="attachIcon">📎</span>
+          <span id="attachName"></span>
+          <span class="remove-attach" id="removeAttach" title="Remove attachment">✕</span>
+        </div>
+        <div class="input-row">
+          <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx,.txt" style="display:none">
+          <button class="composer-icon-btn" id="attachBtn" title="Attach a file or screenshot">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 6.5l-6 6a2.5 2.5 0 003.5 3.5l6-6a4 4 0 00-5.5-5.5l-6 6a5.5 5.5 0 007.5 7.5"/></svg>
+          </button>
+          <textarea id="input" rows="1" placeholder="Describe your issue..."></textarea>
+          <button class="composer-icon-btn" id="micBtn" title="Voice input">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="6" height="9" rx="3"/><path d="M4.5 9.5a5.5 5.5 0 0011 0M10 15v2.5M7.5 17.5h5"/></svg>
+          </button>
+          <button class="send-btn" id="sendBtn" title="Send">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M2.5 10L17.5 2.5L11.5 17.5L9.5 11L2.5 10Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-right">
+      <div class="stat-block">
+        <div class="side-label">Started</div>
+        <div class="stat-value" id="startedAt">--:--</div>
+        <div class="stat-sub">local time</div>
+      </div>
+      <div class="stat-block">
+        <div class="side-label">Messages</div>
+        <div class="stat-value" id="msgCount">0</div>
+        <div class="stat-sub">this session</div>
+      </div>
+      <div class="stat-block">
+        <div class="side-label">Avg. response</div>
+        <div class="stat-value" id="avgResp">—</div>
+        <div class="stat-sub">seconds</div>
+      </div>
+      <div class="stat-block">
+        <div class="side-label">Priority</div>
+        <select class="priority-select" id="prioritySelect">
+          <option value="Low">Low</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="High">High</option>
+          <option value="Urgent">Urgent</option>
+        </select>
+      </div>
+      <button class="escalate-btn" id="escalateBtn">Escalate to human agent</button>
+      <div class="resolve-toggle" id="resolveToggle">Mark ticket resolved</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+  const log = document.getElementById('log');
+  const input = document.getElementById('input');
+  const sendBtn = document.getElementById('sendBtn');
+  const msgCountEl = document.getElementById('msgCount');
+  const avgRespEl = document.getElementById('avgResp');
+  const resolveToggle = document.getElementById('resolveToggle');
+  const sessionTimeEl = document.getElementById('sessionTime');
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.getElementById('themeIcon');
+  const exportBtn = document.getElementById('exportBtn');
+  const fileInput = document.getElementById('fileInput');
+  const attachBtn = document.getElementById('attachBtn');
+  const micBtn = document.getElementById('micBtn');
+  const attachPreview = document.getElementById('attachPreview');
+  const attachName = document.getElementById('attachName');
+  const attachIcon = document.getElementById('attachIcon');
+  const removeAttach = document.getElementById('removeAttach');
+  const langSelect = document.getElementById('langSelect');
+  const faqBtn = document.getElementById('faqBtn');
+  const faqOverlay = document.getElementById('faqOverlay');
+  const faqClose = document.getElementById('faqClose');
+  const faqSearch = document.getElementById('faqSearch');
+  const faqList = document.getElementById('faqList');
+  const prioritySelect = document.getElementById('prioritySelect');
+  const escalateBtn = document.getElementById('escalateBtn');
+  const statusPill = document.getElementById('statusPill');
+  const statusText = document.getElementById('statusText');
+
+  const ticketIdText = '#QD-' + (1000 + Math.floor(Math.random()*8999));
+  document.getElementById('ticketId').textContent = ticketIdText;
+  const startDate = new Date();
+  document.getElementById('startedAt').textContent = startDate.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  setInterval(() => {
+    const diff = Math.floor((Date.now() - startDate.getTime())/1000);
+    const m = String(Math.floor(diff/60)).padStart(2,'0');
+    const s = String(diff%60).padStart(2,'0');
+    sessionTimeEl.textContent = m + ':' + s;
+  }, 1000);
+
+  let history = [];
+  let transcript = []; // { role, text, time }
+  let msgCount = 0;
+  let respTimes = [];
+  let resolved = false;
+  let pendingAttachment = null; // { name, type, base64, mediaType, isImage }
+
+  const SYSTEM_PROMPT = "You are the support agent for QueryDesk, a general e-commerce customer support desk. Help with order status, shipping, returns/refunds, billing questions, technical issues, and account help. Be warm, concise (2-4 short sentences max), and specific. When you don't have real account data, say what you'd normally check and ask for the one detail you'd need (like an order number), rather than inventing fake data. Never claim to have looked up a real record. If the user attaches an image (like a screenshot or product photo), look at it and reference specific details from it in your reply.";
+
+  function timeNow(){
+    return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+  }
+
+  /* ---------- Theme toggle ---------- */
+  function applyTheme(dark){
+    document.body.classList.toggle('dark', dark);
+  }
+  themeToggle.addEventListener('click', () => {
+    applyTheme(!document.body.classList.contains('dark'));
+  });
+
+  /* ---------- Export transcript ---------- */
+  exportBtn.addEventListener('click', () => {
+    if(transcript.length === 0) return;
+    const lines = transcript.map(t => `[${t.time}] ${t.role === 'user' ? 'You' : (t.role === 'agent' ? 'Human Agent' : 'QueryDesk AI')}: ${t.text}`);
+    const header = `QueryDesk Support Transcript\nTicket: ${ticketIdText}\nStarted: ${startDate.toLocaleString()}\nExported: ${new Date().toLocaleString()}\n${'—'.repeat(40)}\n\n`;
+    const blob = new Blob([header + lines.join('\n\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `QueryDesk-${ticketIdText.replace('#','')}-transcript.txt`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  /* ---------- FAQ / knowledge base ---------- */
+  const FAQ_DATA = [
+    { q: "Where is my order?", a: "Track it from the confirmation email link, or give me your order number and I'll walk you through the status stages." },
+    { q: "How long do refunds take?", a: "Refunds are issued within 3-5 business days of the return being received, and typically appear on your statement 2-7 days after that." },
+    { q: "What's your return window?", a: "Most items can be returned within 30 days of delivery, unused and in original packaging." },
+    { q: "How do I change my delivery address?", a: "You can update the address before an order ships from your account's Orders page. Once shipped, contact us and we'll try to redirect it with the carrier." },
+    { q: "Which payment methods are accepted?", a: "We accept major credit/debit cards, UPI, PayPal, and select buy-now-pay-later options at checkout." },
+    { q: "How do I cancel an order?", a: "Orders can be cancelled for free within 1 hour of placing them from your Orders page. After that, you'll need to request a return once it arrives." },
+    { q: "Do you ship internationally?", a: "Yes, we ship to most countries. International orders may include customs fees charged by your local authority." },
+    { q: "How do I reset my account password?", a: "Use 'Forgot password' on the sign-in page — you'll get a reset link by email within a couple of minutes." },
+    { q: "Is my payment information secure?", a: "Yes, all payments are processed through PCI-DSS compliant providers and we never store your full card number." },
+    { q: "How do I contact a human agent?", a: "Use the 'Escalate to human agent' button in the session panel, or just ask me to connect you." }
+  ];
+
+  function renderFaqList(filter){
+    const q = (filter || '').toLowerCase().trim();
+    const matches = FAQ_DATA.filter(item =>
+      !q || item.q.toLowerCase().includes(q) || item.a.toLowerCase().includes(q)
+    );
+    faqList.innerHTML = '';
+    if(matches.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'faq-empty';
+      empty.textContent = 'No matching articles. Try a different search, or ask me directly.';
+      faqList.appendChild(empty);
+      return;
+    }
+    matches.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'faq-item';
+      const qEl = document.createElement('div');
+      qEl.className = 'faq-q';
+      qEl.textContent = item.q;
+      const aEl = document.createElement('div');
+      aEl.className = 'faq-a';
+      aEl.textContent = item.a;
+      el.appendChild(qEl);
+      el.appendChild(aEl);
+      el.addEventListener('click', () => {
+        addMessage('user', item.q);
+        msgCount++;
+        msgCountEl.textContent = msgCount;
+        history.push({ role: 'user', content: item.q });
+        history.push({ role: 'assistant', content: item.a });
+        addMessage('bot', item.a);
+        faqOverlay.classList.remove('show');
+      });
+      faqList.appendChild(el);
+    });
+  }
+  faqBtn.addEventListener('click', () => {
+    faqOverlay.classList.add('show');
+    faqSearch.value = '';
+    renderFaqList('');
+    faqSearch.focus();
+  });
+  faqClose.addEventListener('click', () => faqOverlay.classList.remove('show'));
+  faqOverlay.addEventListener('click', (e) => { if(e.target === faqOverlay) faqOverlay.classList.remove('show'); });
+  faqSearch.addEventListener('input', () => renderFaqList(faqSearch.value));
+
+  /* ---------- File attachment ---------- */
+  attachBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if(!file) return;
+    const isImage = file.type.startsWith('image/');
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result; // data URL
+      const base64 = result.split(',')[1];
+      pendingAttachment = {
+        name: file.name,
+        mediaType: file.type || 'application/octet-stream',
+        base64,
+        isImage,
+        dataUrl: result
+      };
+      attachName.textContent = file.name;
+      attachIcon.textContent = isImage ? '🖼️' : '📎';
+      attachPreview.classList.add('show');
+    };
+    reader.readAsDataURL(file);
+  });
+  removeAttach.addEventListener('click', () => {
+    pendingAttachment = null;
+    fileInput.value = '';
+    attachPreview.classList.remove('show');
+  });
+
+  /* ---------- Voice input ---------- */
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognizer = null;
+  let recording = false;
+  if(SpeechRecognition){
+    recognizer = new SpeechRecognition();
+    recognizer.continuous = false;
+    recognizer.interimResults = true;
+    recognizer.lang = 'en-US';
+
+    recognizer.onresult = (e) => {
+      let text = '';
+      for(let i=0; i<e.results.length; i++){ text += e.results[i][0].transcript; }
+      input.value = text;
+      input.dispatchEvent(new Event('input'));
+    };
+    recognizer.onend = () => {
+      recording = false;
+      micBtn.classList.remove('recording');
+    };
+    recognizer.onerror = () => {
+      recording = false;
+      micBtn.classList.remove('recording');
+    };
+  }
+  micBtn.addEventListener('click', () => {
+    if(!recognizer){
+      addMessage('bot', "Voice input isn't supported in this browser. Try Chrome on desktop or Android.");
+      return;
+    }
+    if(recording){
+      recognizer.stop();
+      recording = false;
+      micBtn.classList.remove('recording');
+    } else {
+      try{
+        recognizer.start();
+        recording = true;
+        micBtn.classList.add('recording');
+      }catch(e){ /* already started */ }
+    }
+  });
+
+  /* ---------- Messages ---------- */
+  function addMessage(role, text, opts){
+    opts = opts || {};
+    const row = document.createElement('div');
+    row.className = 'row ' + (role === 'user' ? 'user' : role);
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar ' + (role === 'user' ? 'user' : role);
+    avatar.textContent = role === 'user' ? 'YOU' : (role === 'agent' ? 'HA' : 'AI');
+    const wrap = document.createElement('div');
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.appendChild(document.createTextNode(text));
+
+    if(opts.attachment){
+      if(opts.attachment.isImage){
+        const img = document.createElement('img');
+        img.className = 'attach-thumb';
+        img.src = opts.attachment.dataUrl;
+        bubble.appendChild(img);
+      } else {
+        const chip = document.createElement('div');
+        chip.className = 'attach-file-chip';
+        chip.textContent = '📎 ' + opts.attachment.name;
+        bubble.appendChild(chip);
+      }
+    }
+
+    const metaLine = document.createElement('div');
+    metaLine.className = 'meta-line';
+    const t = opts.meta || timeNow();
+    metaLine.textContent = t;
+    wrap.appendChild(bubble);
+    wrap.appendChild(metaLine);
+
+    if(role === 'bot' && !opts.noFeedback){
+      const fbRow = document.createElement('div');
+      fbRow.className = 'feedback-row';
+      const upBtn = document.createElement('button');
+      upBtn.className = 'fb-btn up';
+      upBtn.title = 'Helpful';
+      upBtn.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 8.5v8H4.5v-8H7zm0 0l3.5-6a1.5 1.5 0 012.7 1.2L12.3 8.5H15a1.5 1.5 0 011.4 2.05l-2 5A1.5 1.5 0 0113 16.5H7"/></svg>';
+      const downBtn = document.createElement('button');
+      downBtn.className = 'fb-btn down';
+      downBtn.title = 'Not helpful';
+      downBtn.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 11.5v-8h2.5v8H13zm0 0l-3.5 6a1.5 1.5 0 01-2.7-1.2l1-3.8H5a1.5 1.5 0 01-1.4-2.05l2-5A1.5 1.5 0 017 3.5h6"/></svg>';
+      const setChosen = (choice) => {
+        upBtn.classList.toggle('selected', choice === 'up');
+        downBtn.classList.toggle('selected', choice === 'down');
+        upBtn.disabled = true;
+        downBtn.disabled = true;
+      };
+      upBtn.addEventListener('click', () => setChosen('up'));
+      downBtn.addEventListener('click', () => setChosen('down'));
+      fbRow.appendChild(upBtn);
+      fbRow.appendChild(downBtn);
+      wrap.appendChild(fbRow);
+    }
+
+    row.appendChild(avatar);
+    row.appendChild(wrap);
+    log.appendChild(row);
+    log.scrollTop = log.scrollHeight;
+
+    transcript.push({ role, text: text + (opts.attachment ? ` [attached: ${opts.attachment.name}]` : ''), time: t });
+    return bubble;
+  }
+
+  function addTyping(){
+    const row = document.createElement('div');
+    row.className = 'row bot typing';
+    row.id = 'typingRow';
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar bot';
+    avatar.textContent = 'AI';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = '<span class="tdot"></span><span class="tdot"></span><span class="tdot"></span>';
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    log.appendChild(row);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function removeTyping(){
+    const t = document.getElementById('typingRow');
+    if(t) t.remove();
+  }
+
+  async function getBotReply(userText, attachment){
+    let userContent;
+    if(attachment && attachment.isImage){
+      userContent = [
+        { type: 'image', source: { type: 'base64', media_type: attachment.mediaType, data: attachment.base64 } },
+        { type: 'text', text: userText || 'Please take a look at this image.' }
+      ];
+    } else if(attachment){
+      userContent = `${userText || 'I attached a file.'} [attached file: ${attachment.name}, type: ${attachment.mediaType}]`;
+    } else {
+      userContent = userText;
+    }
+    history.push({ role: 'user', content: userContent });
+    try{
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          system: SYSTEM_PROMPT + ` Respond only in ${langSelect.value}, regardless of what language the customer writes in, unless they explicitly ask for another language.`,
+          messages: history
+        })
+      });
+      const data = await response.json();
+      const textBlocks = (data.content || []).filter(b => b.type === 'text').map(b => b.text);
+      const reply = textBlocks.join('\n').trim() || "Sorry, I didn't quite catch that — could you rephrase your question?";
+      history.push({ role: 'assistant', content: reply });
+      return reply;
+    }catch(err){
+      console.error('QueryDesk API error:', err);
+      return "I'm having trouble reaching support right now. Please try again in a moment.";
+    }
+  }
+
+  async function handleSend(){
+    const text = input.value.trim();
+    const attachment = pendingAttachment;
+    if(!text && !attachment) return;
+    input.value = '';
+    input.style.height = 'auto';
+    sendBtn.disabled = true;
+
+    addMessage('user', text || (attachment ? 'Sent an attachment.' : ''), { attachment });
+    msgCount++;
+    msgCountEl.textContent = msgCount;
+
+    pendingAttachment = null;
+    fileInput.value = '';
+    attachPreview.classList.remove('show');
+
+    addTyping();
+    const start = performance.now();
+    const reply = await getBotReply(text, attachment);
+    const elapsed = (performance.now() - start) / 1000;
+    respTimes.push(elapsed);
+    const avg = respTimes.reduce((a,b)=>a+b,0) / respTimes.length;
+    avgRespEl.textContent = avg.toFixed(1) + 's';
+
+    removeTyping();
+    addMessage('bot', reply);
+    sendBtn.disabled = false;
+    input.focus();
+  }
+
+  sendBtn.addEventListener('click', handleSend);
+  input.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      handleSend();
+    }
+  });
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 100) + 'px';
+  });
+
+  document.querySelectorAll('.cat-btn, .suggest-chip').forEach(el => {
+    el.addEventListener('click', () => {
+      input.value = el.getAttribute('data-msg');
+      input.dispatchEvent(new Event('input'));
+      handleSend();
+    });
+  });
+
+  resolveToggle.addEventListener('click', () => {
+    resolved = !resolved;
+    resolveToggle.classList.toggle('done', resolved);
+    resolveToggle.textContent = resolved ? '✓ Ticket resolved' : 'Mark ticket resolved';
+  });
+
+  /* ---------- Priority + escalation ---------- */
+  function addSystemNote(text){
+    const row = document.createElement('div');
+    row.className = 'system-note';
+    row.textContent = text;
+    log.appendChild(row);
+    log.scrollTop = log.scrollHeight;
+    transcript.push({ role: 'system', text, time: timeNow() });
+  }
+
+  escalateBtn.addEventListener('click', async () => {
+    const priority = prioritySelect.value;
+    escalateBtn.disabled = true;
+    escalateBtn.textContent = 'Connecting...';
+    addSystemNote(`Escalating to a human agent — priority: ${priority}`);
+
+    statusPill.classList.add('escalated');
+    statusText.textContent = 'Connecting to agent';
+
+    addTyping();
+    await new Promise(r => setTimeout(r, 1400 + Math.random()*900));
+    removeTyping();
+
+    statusText.textContent = 'With human agent';
+
+    const priorityLine = priority === 'Urgent' ? "I've flagged this as urgent and I'm on it right now."
+      : priority === 'High' ? "This is marked high priority — I've picked it up right away."
+      : "Thanks for waiting — I've got your ticket here and I'm reading through it now.";
+    addMessage('agent', `Hi, this is a human support agent stepping in on ticket ${ticketIdText}. ${priorityLine} Could you give me a quick summary of the issue?`, { noFeedback: true });
+
+    escalateBtn.textContent = '✓ Connected to agent';
+  });
+
+  // greeting
+  addMessage('bot', "Hi, I'm the QueryDesk support assistant. I can help with order status, returns, billing, or technical issues — what's going on?");
+})();
+</script>
+
+</body>
+</html>

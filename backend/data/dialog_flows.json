@@ -1,0 +1,120 @@
+{
+  "flows": {
+    "order_status": {
+      "intent": "order_status",
+      "description": "Multi-turn flow to look up and provide order tracking status",
+      "required_slots": [
+        {
+          "name": "order_id",
+          "entity_type": "order_id",
+          "prompt": "Could you please provide your Order ID? (e.g., #QD-1234 or ORD-5678)",
+          "reprompt": "I didn't quite catch a valid Order ID. Please provide your order number in a format like #QD-1234 or ORD-5678.",
+          "confirmation_required": false
+        }
+      ],
+      "action": "lookup_order_status",
+      "success_message": "Thank you! I found your order {order_id}. Your shipment is currently In Transit and scheduled for delivery within 2 business days. Tracking details have also been sent to your email.",
+      "failure_message": "I was unable to find an active order matching {order_id}. Please verify the number or let me know if you'd like me to connect you with an agent.",
+      "max_retries": 3
+    },
+    "return_request": {
+      "intent": "return_request",
+      "description": "Multi-turn flow to initiate an item return and generate shipping label",
+      "required_slots": [
+        {
+          "name": "order_id",
+          "entity_type": "order_id",
+          "prompt": "I can help you start a return. What is your Order ID? (e.g., #QD-1234)",
+          "reprompt": "Please provide a valid Order ID (e.g., #QD-1234 or ORD-5678) so I can locate the purchase.",
+          "confirmation_required": false
+        },
+        {
+          "name": "reason",
+          "entity_type": "text",
+          "prompt": "What is the reason for your return? (e.g., wrong size, defective item, changed mind, not as described)",
+          "reprompt": "Could you briefly describe the reason for returning the item so we can process your label?",
+          "confirmation_required": false
+        }
+      ],
+      "action": "process_return_request",
+      "success_message": "Your return request for order {order_id} has been approved (Reason: {reason}). A prepaid return shipping label has been generated and emailed to your address. Please drop off the package within 14 days.",
+      "failure_message": "We could not process the return for order {order_id} automatically. This may be because the 30-day window has expired. Would you like me to connect you with a representative?",
+      "max_retries": 3
+    },
+    "refund_status": {
+      "intent": "refund_status",
+      "description": "Multi-turn flow to check the status of a pending or processed refund",
+      "required_slots": [
+        {
+          "name": "order_id_or_email",
+          "entity_type": "order_id_or_email",
+          "prompt": "To check your refund status, please provide your Order ID (e.g., #QD-1234) or the email address linked to your account.",
+          "reprompt": "Please enter a valid Order ID (e.g., #QD-1234) or email address (e.g., user@example.com).",
+          "confirmation_required": false
+        }
+      ],
+      "action": "check_refund_status",
+      "success_message": "Good news! The refund for {order_id_or_email} has been approved and processed back to your original payment method. Depending on your bank, it should reflect in your account within 3-5 business days.",
+      "failure_message": "I could not locate an active refund record for {order_id_or_email}. If your return package was delivered recently, please allow 48 hours for inspection.",
+      "max_retries": 3
+    },
+    "billing_issue": {
+      "intent": "billing_issue",
+      "description": "Multi-turn flow to investigate billing discrepancies or duplicate charges",
+      "required_slots": [
+        {
+          "name": "order_id_or_transaction_id",
+          "entity_type": "order_or_transaction",
+          "prompt": "I can help investigate this billing charge. Could you share your Order ID (#QD-1234) or Transaction ID (TXN-5678)?",
+          "reprompt": "Please provide a valid Order ID (e.g., ORD-1234) or Transaction ID (e.g., TXN-9988) so our billing system can locate the charges.",
+          "confirmation_required": false
+        }
+      ],
+      "action": "audit_billing_charge",
+      "success_message": "I have audited the records for {order_id_or_transaction_id}. Our billing system shows an adjustment is in progress and any erroneous charge will be automatically reversed to your statement within 2-3 business days.",
+      "failure_message": "I could not automatically resolve the charge for {order_id_or_transaction_id}. I have created high-priority billing ticket #BILL-4492 and flagged it for our finance department.",
+      "max_retries": 3
+    },
+    "cancel_order": {
+      "intent": "cancel_order",
+      "description": "Multi-turn flow to cancel an order within the eligible cancellation window",
+      "required_slots": [
+        {
+          "name": "order_id",
+          "entity_type": "order_id",
+          "prompt": "Please provide the Order ID of the order you would like to cancel (e.g., #QD-1234).",
+          "reprompt": "Please enter a valid Order ID (e.g., #QD-1234 or ORD-5678) to proceed with cancellation.",
+          "confirmation_required": false
+        },
+        {
+          "name": "confirmation",
+          "entity_type": "confirmation",
+          "prompt": "Are you sure you want to cancel order {order_id}? Please reply 'yes' to confirm or 'no' to keep your order.",
+          "reprompt": "Please respond with 'yes' or 'confirm' to cancel your order, or 'no' to cancel this request.",
+          "confirmation_required": true
+        }
+      ],
+      "action": "cancel_order_action",
+      "success_message": "Order {order_id} has been successfully cancelled! A full refund has been initiated to your original payment method, and a cancellation confirmation has been sent to your email.",
+      "failure_message": "We were unable to cancel order {order_id} because it has already reached the fulfillment/shipping stage. Once it arrives, you can use our free returns portal to return it.",
+      "max_retries": 3
+    },
+    "account_help": {
+      "intent": "account_help",
+      "description": "Multi-turn flow to handle account recovery, password reset, and settings update",
+      "required_slots": [
+        {
+          "name": "email_or_username",
+          "entity_type": "email_or_username",
+          "prompt": "Please share your registered email address or username so I can locate your account.",
+          "reprompt": "Please enter a valid email address (e.g., name@domain.com) or your account username.",
+          "confirmation_required": false
+        }
+      ],
+      "action": "trigger_account_recovery",
+      "success_message": "We have sent a secure password reset link and account recovery instructions to the email associated with {email_or_username}. The link will remain active for 30 minutes.",
+      "failure_message": "No account was found matching {email_or_username}. Please double-check the spelling or create a new account.",
+      "max_retries": 3
+    }
+  }
+}
