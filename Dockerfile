@@ -10,8 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir --user torch --index-url https://download.pytorch.org/whl/cpu && \
-    pip install --no-cache-dir --user -r requirements.txt
+RUN pip install --no-cache-dir --user -r requirements.txt
 
 # Pre-download standard NLTK datasets
 RUN python -m nltk.downloader -d /root/nltk_data punkt punkt_tab stopwords wordnet averaged_perceptron_tagger_eng vader_lexicon

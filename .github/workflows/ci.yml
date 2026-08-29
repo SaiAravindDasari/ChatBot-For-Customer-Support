@@ -28,14 +28,17 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install torch --index-url https://download.pytorch.org/whl/cpu
           pip install -r requirements.txt
 
-      - name: Initialize Database & NLTK Tokenizers
+      - name: Download NLTK Datasets
+        run: |
+          python -c "import nltk; datasets=['punkt','punkt_tab','stopwords','wordnet','vader_lexicon','averaged_perceptron_tagger','averaged_perceptron_tagger_eng']; [nltk.download(d, quiet=True) for d in datasets]"
+
+      - name: Initialize Database
         env:
           PYTHONPATH: .
         run: |
-          python setup.py
+          python -c "import asyncio; from backend.database import DatabaseManager; from backend.config import Config; asyncio.run(DatabaseManager(Config.DATABASE_PATH).initialize())"
 
       - name: Run Pytest Test Suite
         env:
