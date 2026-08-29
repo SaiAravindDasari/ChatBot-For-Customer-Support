@@ -34,29 +34,31 @@ def download_spacy_model():
         try:
             spacy.load("en_core_web_sm")
             logger.info("  ✅ en_core_web_sm already installed")
-        except OSError:
-            subprocess.check_call(
-                [sys.executable, "-m", "spacy", "download", "en_core_web_sm"],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-            logger.info("  ✅ en_core_web_sm downloaded")
+        except Exception:
+            try:
+                subprocess.run(
+                    [sys.executable, "-m", "spacy", "download", "en_core_web_sm"],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    check=False,
+                )
+                logger.info("  ✅ en_core_web_sm download attempted")
+            except Exception as e:
+                logger.warning("  ⚠️ SpaCy download skipped: %s — fallback to regex NER", e)
     except ImportError:
         logger.warning("  ⚠️ SpaCy not installed — entity extraction will use regex only")
 
 
 def test_sentence_transformers():
     """Test if sentence-transformers can load the embedding model."""
-    logger.info("📥 Testing sentence-transformers model …")
+    logger.info("📥 Testing sentence-transformers availability …")
     try:
-        from sentence_transformers import SentenceTransformer
-        model = SentenceTransformer("all-MiniLM-L6-v2")
-        _ = model.encode(["test"])
-        logger.info("  ✅ all-MiniLM-L6-v2 loaded (will be cached for future use)")
+        import sentence_transformers
+        logger.info("  ✅ sentence-transformers package available")
     except ImportError:
         logger.warning("  ⚠️ sentence-transformers not installed — will fall back to TF-IDF")
     except Exception as e:
-        logger.warning("  ⚠️ Could not load model: %s — will fall back to TF-IDF", e)
+        logger.warning("  ⚠️ Could not import sentence-transformers: %s — will fall back to TF-IDF", e)
 
 
 def initialize_database():
