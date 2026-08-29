@@ -107,7 +107,7 @@ class IntentClassifier:
             return ('unknown', 0.0)
             
         best_index = np.argmax(similarities)
-        best_score = float(similarities[best_index])
+       best_score = float(np.clip(similarities[best_index], 0.0, 1.0))
         
         if best_score < 0.3:
             return ('unknown', 0.0)
