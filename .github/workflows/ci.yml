@@ -28,17 +28,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-cov anyio
 
       - name: Download NLTK Tokenizers & Setup Models
+        env:
+          PYTHONPATH: .
         run: |
           python setup.py
 
       - name: Run Pytest Test Suite
+        env:
+          PYTHONPATH: .
         run: |
-          python -m pytest tests/ -v --cov=backend --cov-report=term-missing
+          python -m pytest tests/ -v
 
       - name: Verify Health Probes
+        env:
+          PYTHONPATH: .
         run: |
           python -c "import backend.app; print('FastAPI App and routes successfully compiled.')"
 

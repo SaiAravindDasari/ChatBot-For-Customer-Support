@@ -17,7 +17,7 @@ def download_nltk_data():
     """Download required NLTK datasets."""
     logger.info("📥 Downloading NLTK data …")
     import nltk
-    datasets = ["punkt_tab", "stopwords", "wordnet", "averaged_perceptron_tagger_eng", "vader_lexicon"]
+    datasets = ["punkt", "punkt_tab", "stopwords", "wordnet", "averaged_perceptron_tagger", "averaged_perceptron_tagger_eng", "vader_lexicon"]
     for ds in datasets:
         try:
             nltk.download(ds, quiet=True)

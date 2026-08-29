@@ -43,7 +43,7 @@ USER querydesk
 
 # Health check probe
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:5000/health/ready || exit 1
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/health/ready')" || exit 1
 
 EXPOSE 5000
 
