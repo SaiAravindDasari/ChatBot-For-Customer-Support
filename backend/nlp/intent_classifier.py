@@ -1,7 +1,7 @@
 import json
 import logging
 import random
-from typing import Tuple, List, Dict, Any
+from typing import Tuple, List, Dict, Any Optional
 import numpy as np
 
 try:
